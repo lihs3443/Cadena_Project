@@ -7,46 +7,46 @@ public class PlayerInventory : MonoBehaviour
 {
     Item[] inventory = new Item[9];
     /// <summary>
-    /// ÇÃ·¹ÀÌ¾î°¡ µé°íÀÖ´Â ¾ÆÀÌÅÛÀÇ ÀÎµ¦½º
+    /// í”Œë ˆì´ì–´ê°€ ë“¤ê³ ìˆëŠ” ì•„ì´í…œì˜ ì¸ë±ìŠ¤
     /// </summary>
     int handIndex = 0;
 
     private void Awake()
     {
-        //°ª Ã»¼Ò
+        //ê°’ ì²­ì†Œ
         for (int repeatCount = 0; repeatCount < inventory.Length; repeatCount++)
         {
             inventory[repeatCount] = null;
         }
-        //jsonµî¿¡¼­ ÀúÀåµÈ µ¥ÀÌÅÍ·Î °¡Á®¿À´Â ÇàÀ§ ÀÛ¼º
+        //jsonë“±ì—ì„œ ì €ì¥ëœ ë°ì´í„°ë¡œ ê°€ì ¸ì˜¤ëŠ” í–‰ìœ„ ì‘ì„±
     }
 
     /// <summary>
-    /// ÇÃ·¹ÀÌ¾îÀÇ ÀÎº¥Åä¸®¿¡ ¾ÆÀÌÅÛÀ» ³Ö°íÀÚ ÇÒ ¶§ »ç¿ë
+    /// í”Œë ˆì´ì–´ì˜ ì¸ë²¤í† ë¦¬ì— ì•„ì´í…œì„ ë„£ê³ ì í•  ë•Œ ì‚¬ìš©
     /// </summary>
-    /// <param name="_index">¸î ¹øÂ° Index¿¡ ³ÖÀ»Áö</param>
-    /// <param name="_item">³ÖÀ» ¾ÆÀÌÅÛÀÇ Item°´Ã¼</param>
-    /// <param name="_overWrite">ÇØ´ç Index¿¡ ÀÌ¹Ì ¾ÆÀÌÅÛÀÌ Á¸ÀçÇØµµ °­Á¦ÀûÀ¸·Î _itemÀ¸·Î µ¤¾î¾º¿ïÁö(ºñ±ÇÀå)</param>
-    /// <returns>¾ÆÀÌÅÛÀ» ³Ö¾úÀ½¿¡ ¼º°ø ¿©ºÎ¸¦ ¹İÈ¯</returns>
+    /// <param name="_index">ëª‡ ë²ˆì§¸ Indexì— ë„£ì„ì§€</param>
+    /// <param name="_item">ë„£ì„ ì•„ì´í…œì˜ Itemê°ì²´</param>
+    /// <param name="_overWrite">í•´ë‹¹ Indexì— ì´ë¯¸ ì•„ì´í…œì´ ì¡´ì¬í•´ë„ ê°•ì œì ìœ¼ë¡œ _itemìœ¼ë¡œ ë®ì–´ì”Œìš¸ì§€(ë¹„ê¶Œì¥)</param>
+    /// <returns>ì•„ì´í…œì„ ë„£ì—ˆìŒì— ì„±ê³µ ì—¬ë¶€ë¥¼ ë°˜í™˜</returns>
     public bool InsertItem(int _index, Item _item, bool _overWrite = false)
     {
-        //ÇØ´ç Ä­ÀÌ ºñ¾îÀÖÁö ¾Ê´Ù¸é
+        //í•´ë‹¹ ì¹¸ì´ ë¹„ì–´ìˆì§€ ì•Šë‹¤ë©´
         if (inventory[_index] != null)
         {
             if (_overWrite)
             {
-                Debug.Log($"{_index}¹øÂ° ÀÎº¥Åä¸®ÀÇ '{inventory[_index]}'À»(¸¦) '{_item}'À¸·Î µ¤¾î¾º¿ü½À´Ï´Ù.");
+                Debug.Log($"{_index}ë²ˆì§¸ ì¸ë²¤í† ë¦¬ì˜ '{inventory[_index]}'ì„(ë¥¼) '{_item}'ìœ¼ë¡œ ë®ì–´ì”Œì› ìŠµë‹ˆë‹¤.");
                 return true;
             }
-            Debug.Log($"{_index}¹øÂ° ÀÎº¥Åä¸®°¡ ºñ¾îÀÖÁö ¾Ê¾Æ '{_item}'À» »ğÀÔÇÏ´Â ÇàÀ§¿¡ ½ÇÆĞÇÏ¿´½À´Ï´Ù.");
+            Debug.Log($"{_index}ë²ˆì§¸ ì¸ë²¤í† ë¦¬ê°€ ë¹„ì–´ìˆì§€ ì•Šì•„ '{_item}'ì„ ì‚½ì…í•˜ëŠ” í–‰ìœ„ì— ì‹¤íŒ¨í•˜ì˜€ìŠµë‹ˆë‹¤.");
             return false;
         }
-        Debug.Log($"{_index}¹øÂ° ÀÎº¥Åä¸®¿¡ '{_item}'À» »ğÀÔÇÏ¿´½À´Ï´Ù.");
+        Debug.Log($"{_index}ë²ˆì§¸ ì¸ë²¤í† ë¦¬ì— '{_item}'ì„ ì‚½ì…í•˜ì˜€ìŠµë‹ˆë‹¤.");
         return true;
     }
 
     /// <summary>
-    /// ÀÎº¥Åä¸®ÀÇ ¾ÆÀÌÅÛ ¸ñ·ÏÀ» ¸®ÅÏÇÏ´Â ¿ªÇÒ
+    /// ì¸ë²¤í† ë¦¬ì˜ ì•„ì´í…œ ëª©ë¡ì„ ë¦¬í„´í•˜ëŠ” ì—­í• 
     /// </summary>
     /// <returns>inventory[]</returns>1
     public Item[] GetItems()

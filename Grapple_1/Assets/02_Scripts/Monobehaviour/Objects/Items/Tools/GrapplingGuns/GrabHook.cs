@@ -2,23 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/*ÈÄÅ©¸¦ ¹ß»çÇÏ¿´À» ¶§, ÈÄÅ©ÀÇ ÀÌµ¿¼ºÀÌ ±×·¡ÇÃ°ÇÀÇ À§Ä¡¿Í »ó°üÀÌ ÀÖ´Â°¡?
-ÀÖÀ» °æ¿ì: ÈÄÅ©ÀÇ ÀÌµ¿¹æ½ÄÀ» ´Ü¼øÈ÷ ÈÄÅ©ÀÇ ¾î´À ÇÑ ÃàÀ¸·Î ÀÌµ¿ÇÏ°Ô ¼³Á¤
-¾øÀ» °æ¿ì: ¹ß»ç¸¦ ÇÑ ½ÃÁ¡¿¡ rayµîÀ» ½÷ ÃÖÁ¾ Ãæµ¹ ÁöÁ¡À» Á¤ÇØ³õ°í ÇØ´ç ¹æÇâÀ¸·Î ³ª¾Æ°¡µµ·Ï ¼³Á¤*/
+/*í›„í¬ë¥¼ ë°œì‚¬í•˜ì˜€ì„ ë•Œ, í›„í¬ì˜ ì´ë™ì„±ì´ ê·¸ë˜í”Œê±´ì˜ ìœ„ì¹˜ì™€ ìƒê´€ì´ ìˆëŠ”ê°€?
+ìˆì„ ê²½ìš°: í›„í¬ì˜ ì´ë™ë°©ì‹ì„ ë‹¨ìˆœíˆ í›„í¬ì˜ ì–´ëŠ í•œ ì¶•ìœ¼ë¡œ ì´ë™í•˜ê²Œ ì„¤ì •
+ì—†ì„ ê²½ìš°: ë°œì‚¬ë¥¼ í•œ ì‹œì ì— rayë“±ì„ ì´ ìµœì¢… ì¶©ëŒ ì§€ì ì„ ì •í•´ë†“ê³  í•´ë‹¹ ë°©í–¥ìœ¼ë¡œ ë‚˜ì•„ê°€ë„ë¡ ì„¤ì •*/
 
-//ÈÄÅ©ÀÇ collider.isTrigger = true
+//í›„í¬ì˜ collider.isTrigger = true
 
 public class GrabHook : MonoBehaviour
 {
     delegate void WhenUseEnded();
     //public event WhenUseEnded whenUseEnded;
 
-    GrapplingGun parentHook = null; //ÀÚ½Å(GO)°¡ ºÙ¾îÀÖ´Â ÈÅ °ÔÀÓ¿ÀºêÁ§Æ®ÀÇ GrapplingHookÄÄÆ÷³ÍÆ®
+    GrapplingGun parentHook = null; //ìì‹ (GO)ê°€ ë¶™ì–´ìˆëŠ” í›… ê²Œì„ì˜¤ë¸Œì íŠ¸ì˜ GrapplingHookì»´í¬ë„ŒíŠ¸
 
     /// <summary>
-    /// ÀÚ½Å(±×·¦ ÈÅ)ÀÌ Æ¯Á¤ ¿ÀºêÁ§Æ®¿Í Ãæµ¹ÇÏ´Â °ÍÀ» °¨ÁöÇÏ´Â ¿ªÇÒ
+    /// ìì‹ (ê·¸ë© í›…)ì´ íŠ¹ì • ì˜¤ë¸Œì íŠ¸ì™€ ì¶©ëŒí•˜ëŠ” ê²ƒì„ ê°ì§€í•˜ëŠ” ì—­í• 
     /// </summary>
-    /// <param name="_collision">Ãæµ¹ÇÑ Äİ¶óÀÌ´õ</param>
+    /// <param name="_collision">ì¶©ëŒí•œ ì½œë¼ì´ë”</param>
 
     private void OnTriggerEnter2D(Collider2D _collision)
     {

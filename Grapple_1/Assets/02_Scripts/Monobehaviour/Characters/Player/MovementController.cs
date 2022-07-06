@@ -8,57 +8,61 @@ public class MovementController : MonoBehaviour
     Player player;
     Rigidbody2D rb2d;
     SpriteRenderer sprite;
-    Grappling grappling;        // ±×·¦ÀÌ ºÙ¾îÀÖÀ» °æ¿ì velocity´ë½Å Addforce·Î º¯°æÇÏ±â À§ÇÑ º¯¼ö
-    Animator animator;          // ¾Ö´Ï¸ŞÀÌ¼Ç¿ë
+    Grappling grappling;        // ê·¸ë©ì´ ë¶™ì–´ìˆì„ ê²½ìš° velocityëŒ€ì‹  Addforceë¡œ ë³€ê²½í•˜ê¸° ìœ„í•œ ë³€ìˆ˜
+    Animator animator;          // ì• ë‹ˆë©”ì´ì…˜ìš©
+    Transform pet;              // í« ë°©í–¥ ë° ìœ„ì¹˜ ì¡°ì •ìš©
 
     [System.Serializable]
     public class Conditions
     {
         /// <summary>
-        /// ´ë½¬ »óÅÂ ¿©ºÎ
-        /// <br />´ë½¬ ½ÃÀü ¹× ÄğÅ¸ÀÓ °ü·Ã¿¡¼­ »ç¿ë
+        /// ëŒ€ì‰¬ ìƒíƒœ ì—¬ë¶€
+        /// <br />ëŒ€ì‰¬ ì‹œì „ ë° ì¿¨íƒ€ì„ ê´€ë ¨ì—ì„œ ì‚¬ìš©
         /// </summary>
         [ReadOnly] public bool isDash = false;
+        [ReadOnly] public bool isRoll = false;
         [ReadOnly] public float CurrDashTimer;
         public float DefaultDashCooldown;
         [ReadOnly] public Vector2 DashDir;
         public float DashSpeed = 20;
+        public float RollSpeed = 15;
         public float DashCooldown = 2;
+        public float WireActionSpeed = 7;
         /// <summary>
-        /// ÇöÀç ÁÂ / ¿ì·Î ¿òÁ÷ÀÌ´ÂÁö ¿©ºÎ
-        /// <br />½ºÇÁ¶óÀÌÆ® ¹İÀü ¿©ºÎµî¿¡ »ç¿ë
+        /// í˜„ì¬ ì¢Œ / ìš°ë¡œ ì›€ì§ì´ëŠ”ì§€ ì—¬ë¶€
+        /// <br />ìŠ¤í”„ë¼ì´íŠ¸ ë°˜ì „ ì—¬ë¶€ë“±ì— ì‚¬ìš©
         /// </summary>
         [ReadOnly] public bool isMoving = false;
         /// <summary>
-        /// ÇöÀç ¶¥À» ¹â°íÀÖ´ÂÁö ¿©ºÎ
-        /// <br />ÀÏ¹İ Á¡ÇÁ / °øÁß Á¡ÇÁ ±¸ºĞ
+        /// í˜„ì¬ ë•…ì„ ë°Ÿê³ ìˆëŠ”ì§€ ì—¬ë¶€
+        /// <br />ì¼ë°˜ ì í”„ / ê³µì¤‘ ì í”„ êµ¬ë¶„
         /// </summary>
         [ReadOnly] public bool isGround = false;
         /// <summary>
-        /// ÇÃ·¹ÀÌ¾î°¡ ¿À¸¥ÂÊÀ» º¸°íÀÖ´ÂÁö ¿©ºÎ
-        /// <br />Sprite.flipX³ª ray¹æÇâ µî ¼±Á¤
+        /// í”Œë ˆì´ì–´ê°€ ì˜¤ë¥¸ìª½ì„ ë³´ê³ ìˆëŠ”ì§€ ì—¬ë¶€
+        /// <br />Sprite.flipXë‚˜ rayë°©í–¥ ë“± ì„ ì •
         /// </summary>
         //[ReadOnly] public bool lookRight = true;
         /// <summary>
-        /// 'W'Å°°¡ ´­¸° »óÅÂ ¿©ºÎ
-        /// <br />Á¡ÇÁ ³ôÀÌ Á¶ÀıÀ» À§ÇØ »ç¿ë
+        /// 'W'í‚¤ê°€ ëˆŒë¦° ìƒíƒœ ì—¬ë¶€
+        /// <br />ì í”„ ë†’ì´ ì¡°ì ˆì„ ìœ„í•´ ì‚¬ìš©
         /// </summary>
         [ReadOnly] public bool pressedWKey = false;
     }
     [System.Serializable]
     public class JumpStats
     {
-        [Header("Á¡ÇÁ ¼Ó¼º")]
-        //[Tooltip("Ãß°¡ Á¡ÇÁ È½¼ö(°øÁß Á¡ÇÁ)")] public uint extraJumpCount = 1;
-        //[ReadOnly, Tooltip("ÇöÀç ³²Àº Ãß°¡ Á¡ÇÁ È½¼ö")]
+        [Header("ì í”„ ì†ì„±")]
+        //[Tooltip("ì¶”ê°€ ì í”„ íšŸìˆ˜(ê³µì¤‘ ì í”„)")] public uint extraJumpCount = 1;
+        //[ReadOnly, Tooltip("í˜„ì¬ ë‚¨ì€ ì¶”ê°€ ì í”„ íšŸìˆ˜")]
         //public uint extraJumpCounter = 0;
-        [Tooltip("±âº» Á¡ÇÁ ³ôÀÌ(Á¤Áö »óÅÂ¿¡¼­ÀÇ)")] public float baseJumpHeight = 6.01f;
-        [Tooltip("³ôÀº Á¡ÇÁ ³ôÀÌ(WÅ°¸¦ ´©¸§)")] public float highestJumpHeight = 8.71f;
-        [Tooltip("Á¡ÇÁ Áß °¡¼Óµµ ¹èÀ²(ÀÌµ¿ Áß Á¡ÇÁ)\n°¡¼Óµµ: Á¡ÇÁ¸¦ ÇÒ ´ç½ÃÀÇ (ÁÂ/¿ì ¼Óµµ * ÇØ´ç ¹èÀ²)\nÇöÀç ¹Ì±¸Çö")] public float accelerationMagnification = 0.22f;
+        [Tooltip("ê¸°ë³¸ ì í”„ ë†’ì´(ì •ì§€ ìƒíƒœì—ì„œì˜)")] public float baseJumpHeight = 6.01f;
+        [Tooltip("ë†’ì€ ì í”„ ë†’ì´(Wí‚¤ë¥¼ ëˆ„ë¦„)")] public float highestJumpHeight = 8.71f;
+        [Tooltip("ì í”„ ì¤‘ ê°€ì†ë„ ë°°ìœ¨(ì´ë™ ì¤‘ ì í”„)\nê°€ì†ë„: ì í”„ë¥¼ í•  ë‹¹ì‹œì˜ (ì¢Œ/ìš° ì†ë„ * í•´ë‹¹ ë°°ìœ¨)\ní˜„ì¬ ë¯¸êµ¬í˜„")] public float accelerationMagnification = 0.22f;
 
-        [Header("Á¡ÇÁ ½ºÅÈ")]
-        [Tooltip("Á¡ÇÁ °£ Äğ´Ù¿î\nÁ¡ÇÁ °£ °£°İÀÌ ¾ø´Ù¸é ¾Ö´Ï¸ŞÀÌ¼ÇÀÇ ÀÚ¿¬½º·¯¿òÀÌ³ª Å° ´ÙÁß ÀÔ·Â µî ¹®Á¦°¡ ÀÖ±â ¶§¹®¿¡ ¤JÀº °£°İÀ» ÁÖ´Â µ¥ »ç¿ë")] public float jumpCooldown = 0.19f;
-        [ReadOnly, Tooltip("ÇöÀç Á¡ÇÁ Äğ´Ù¿î")]
+        [Header("ì í”„ ìŠ¤íƒ¯")]
+        [Tooltip("ì í”„ ê°„ ì¿¨ë‹¤ìš´\nì í”„ ê°„ ê°„ê²©ì´ ì—†ë‹¤ë©´ ì• ë‹ˆë©”ì´ì…˜ì˜ ìì—°ìŠ¤ëŸ¬ì›€ì´ë‚˜ í‚¤ ë‹¤ì¤‘ ì…ë ¥ ë“± ë¬¸ì œê°€ ìˆê¸° ë•Œë¬¸ì— ì§«ì€ ê°„ê²©ì„ ì£¼ëŠ” ë° ì‚¬ìš©")] public float jumpCooldown = 0.19f;
+        [ReadOnly, Tooltip("í˜„ì¬ ì í”„ ì¿¨ë‹¤ìš´")]
         public float jumpCooldownCounter = 0.00f;
 
         public void InitializeVariables()
@@ -68,22 +72,23 @@ public class MovementController : MonoBehaviour
         }
     }
     /// <summary>
-    /// Á¡ÇÁ¿¡ °ü·ÃµÈ Á¤º¸¸¦ ¸ğ¾Æ³õÀº °´Ã¼
+    /// ì í”„ì— ê´€ë ¨ëœ ì •ë³´ë¥¼ ëª¨ì•„ë†“ì€ ê°ì²´
     /// </summary>
     public JumpStats jumpStats = new JumpStats();
     [Space]
-    [SerializeField] float groundCheckRayLength = 0.8f; //¶¥ Ã¼Å© Ray ±æÀÌ
+    [SerializeField] float groundCheckRayLength = 0.8f; //ë•… ì²´í¬ Ray ê¸¸ì´
 
-    [Header("°¢Á¾ Á¶°Ç µğ¹ö±ë¿ë")]
+    [Header("ê°ì¢… ì¡°ê±´ ë””ë²„ê¹…ìš©")]
     /// <summary>
-    /// °¢Á¾ Á¶°ÇµéÀ» ¸ğ¾Æ³õÀº °´Ã¼
+    /// ê°ì¢… ì¡°ê±´ë“¤ì„ ëª¨ì•„ë†“ì€ ê°ì²´
     /// </summary>
     public Conditions conditions = new Conditions();
 
+    Vector2 wireaction = Vector2.zero;
     Vector2 movement = Vector2.zero;
 
     /// <summary>
-    /// Å° InputµéÀ» PlayerInputManager¿¡ Ãß°¡ÇÏ´Â ¿ªÇÒ
+    /// í‚¤ Inputë“¤ì„ PlayerInputManagerì— ì¶”ê°€í•˜ëŠ” ì—­í• 
     /// </summary>
     void AddKeyBindInputManager()
     {
@@ -103,6 +108,7 @@ public class MovementController : MonoBehaviour
         sprite = GetComponent<SpriteRenderer>();
         grappling = GetComponent<Grappling>();
         animator = GetComponent<Animator>();
+        pet = transform.GetChild(0);
     }
 
     private void Start()
@@ -115,13 +121,20 @@ public class MovementController : MonoBehaviour
 
     private void Update()
     {
-        // °È±â
-        if (grappling.isAttatch)                                        // ±×·¦ÀÌ ºÙ¾îÀÖÀ» °æ¿ì
-            rb2d.AddForce(new Vector2(movement.x * 0.15f, 0));
-        else                                                            // ±×·¦ÀÌ ºÙ¾îÀÖÁö ¾ÊÀ» °æ¿ì
+        if (conditions.isGround)
+        {
+            rb2d.gravityScale = 10;
+            animator.SetBool("_Rolling", false);
+        }
+        else
+            rb2d.gravityScale = 1.5f;
+        // ê±·ê¸°
+        if (grappling.isAttatch)                                        // ê·¸ë©ì´ ë¶™ì–´ìˆì„ ê²½ìš°
+            rb2d.AddForce(new Vector2(wireaction.x * 0.15f, 0));
+        else                                                            // ê·¸ë©ì´ ë¶™ì–´ìˆì§€ ì•Šì„ ê²½ìš°
             rb2d.velocity = new Vector2(movement.x, rb2d.velocity.y);
 
-        // ´ë½¬
+        // ëŒ€ì‰¬
         if (Input.GetKeyDown(KeyCode.LeftShift) && !conditions.isDash && conditions.DashCooldown <= 0)
         {
             conditions.isDash = true;
@@ -134,48 +147,52 @@ public class MovementController : MonoBehaviour
             else
                 conditions.DashDir = -transform.right;
 
-            animator.Play("Dash");
-            animator.SetBool("_Dash",true);
-        }
-        if(conditions.isDash)
-        {
-                rb2d.velocity = conditions.DashDir * conditions.DashSpeed;
-
-            conditions.CurrDashTimer -= Time.deltaTime;
-
-            if (conditions.CurrDashTimer <= 0)
+            if (grappling.isAttatch)
             {
-                conditions.isDash = false;
-                animator.SetBool("_Dash", false);
+                rb2d.velocity = new Vector2(0, 0);
+                rb2d.AddForce(new Vector2(0, conditions.RollSpeed), ForceMode2D.Impulse);
+                conditions.isRoll = true;
+                grappling.Hookoff();
+
+                animator.Play("Rolling_Intro");
+                animator.SetBool("_Rolling", true);
+            }
+            else
+            {
+                animator.Play("Dash");
+                animator.SetBool("_Dash", true);
+                animator.SetBool("_Rolling", false);
             }
         }
-        if(conditions.DashCooldown >= 0)
+        if (conditions.isDash)
+            Dash();
+        if (conditions.DashCooldown >= 0)
             conditions.DashCooldown -= Time.deltaTime;
 
-        // Á¡ÇÁ
+        // ì í”„
         if (jumpStats.jumpCooldownCounter >= 0.00f)                     
         {
             jumpStats.jumpCooldownCounter -= Time.deltaTime;
         }
         else
         {
-            if(conditions.isGround)                                     // ¶¥¿¡ ´êÀ¸¸é Jump ¾Ö´Ï¸ŞÀÌ¼Ç off
+            if(conditions.isGround)                                     // ë•…ì— ë‹¿ìœ¼ë©´ Jump ì• ë‹ˆë©”ì´ì…˜ off
                 animator.SetBool("_Jump", false);
         }
 
-        // °È±â ¾Ö´Ï¸ŞÀÌ¼Ç
-        if (conditions.isGround)                                        // ¶¥¿¡ ´ê¾ÒÀ» ¶§
+        // ê±·ê¸° ì• ë‹ˆë©”ì´ì…˜
+        if (conditions.isGround)                                        // ë•…ì— ë‹¿ì•˜ì„ ë•Œ
         {
-            if (conditions.isMoving)                                    // ÀÌµ¿Áß ÀÌ¶ó¸é
+            if (conditions.isMoving)                                    // ì´ë™ì¤‘ ì´ë¼ë©´
             {
-                animator.SetBool("_Running", true);                     // Running ¾Ö´Ï¸ŞÀÌ¼Ç on
+                animator.SetBool("_Running", true);                     // Running ì• ë‹ˆë©”ì´ì…˜ on
             }
-            else                                                        // ÀÌµ¿ÁßÀÌ ¾Æ´Ï¶ó¸é
+            else                                                        // ì´ë™ì¤‘ì´ ì•„ë‹ˆë¼ë©´
             {
-                animator.SetBool("_Running", false);                    // Running ¾Ö´Ï¸ŞÀÌ¼Ç off
+                animator.SetBool("_Running", false);                    // Running ì• ë‹ˆë©”ì´ì…˜ off
             }
         }
-        else                                                            // ¶¥ÀÌ ¾Æ´Ï¿©µµ Running ¾Ö´Ï¸ŞÀÌ¼Ç off
+        else                                                            // ë•…ì´ ì•„ë‹ˆì—¬ë„ Running ì• ë‹ˆë©”ì´ì…˜ off
         {
             animator.SetBool("_Running", false);
         }
@@ -186,26 +203,26 @@ public class MovementController : MonoBehaviour
     }
 
     /// <summary>
-    /// conditions.isGroundÀÇ °ªÀ» º¯°æÇØÁÖ´Â ¿ªÇÒ
+    /// conditions.isGroundì˜ ê°’ì„ ë³€ê²½í•´ì£¼ëŠ” ì—­í• 
     /// </summary>
     void CheckGroundWithRaycast()
     {
         RaycastHit2D DrayHit = Physics2D.Raycast(transform.position, Vector2.down, groundCheckRayLength, 1 << 8); // 8 == Ground Layer
         Debug.DrawRay(transform.position, Vector2.down * groundCheckRayLength, Color.red, Time.deltaTime);
-        //if (conditions.isGround == false && DrayHit) //¶¥À» ¹â°íÀÖÁö ¾Ê´Ù°¡ -> ¶¥À» ¹âÀº °æ¿ì
+        //if (conditions.isGround == false && DrayHit) //ë•…ì„ ë°Ÿê³ ìˆì§€ ì•Šë‹¤ê°€ -> ë•…ì„ ë°Ÿì€ ê²½ìš°
         //{
-        //    jumpStats.extraJumpCounter = jumpStats.extraJumpCount; //¿¢½ºÆ®¶ó Á¡ÇÁ È½¼ö ÃÊ±âÈ­
+        //    jumpStats.extraJumpCounter = jumpStats.extraJumpCount; //ì—‘ìŠ¤íŠ¸ë¼ ì í”„ íšŸìˆ˜ ì´ˆê¸°í™”
         //}
         conditions.isGround = DrayHit;
         Debug.Log($"{DrayHit.collider?.gameObject.name}");
     }
 
     /// <summary>
-    /// ÇÃ·¹ÀÌ¾îÀÇ Å°º¸µå¿¡¼­ ÀÔ·Â°ªÀ» ¹Ş°í ¿òÁ÷ÀÓÀ» ÀÇ¹ÌÇÏ´Â Vector2ÀÇ °ªÀ» ¹Ù²ãÁÖ´Â ¿ªÇÒ
+    /// í”Œë ˆì´ì–´ì˜ í‚¤ë³´ë“œì—ì„œ ì…ë ¥ê°’ì„ ë°›ê³  ì›€ì§ì„ì„ ì˜ë¯¸í•˜ëŠ” Vector2ì˜ ê°’ì„ ë°”ê¿”ì£¼ëŠ” ì—­í• 
     /// </summary>
     void GetInputMovement(InputAction.CallbackContext _context)
     {
-        //Å° ÀÔ·ÂÀ» ¹ŞÁö ¾Ê´Â »óÅÂ
+        //í‚¤ ì…ë ¥ì„ ë°›ì§€ ì•ŠëŠ” ìƒíƒœ
         if (_context.action.enabled == false)
         {
             return;
@@ -213,49 +230,75 @@ public class MovementController : MonoBehaviour
 
         Debug.Log($"{_context.ReadValue<Vector2>()}");
         movement = _context.ReadValue<Vector2>() * player.playerStat.movementSpeed;
-        //Á¶°Ç Ãß°¡ÇØ¾ßÇÔ
+        wireaction = _context.ReadValue<Vector2>() * conditions.WireActionSpeed;
+        //ì¡°ê±´ ì¶”ê°€í•´ì•¼í•¨
 
         if (!conditions.isDash)
         {
             if (movement.x < 0)
+            {
                 sprite.flipX = false;
+                pet.GetComponent<SpriteRenderer>().flipX = false;
+                pet.localPosition = new Vector3(Mathf.Abs(pet.localPosition.x), pet.localPosition.y,0);
+            }
             if (movement.x > 0)
+            {
                 sprite.flipX = true;
+                pet.GetComponent<SpriteRenderer>().flipX = true;
+                pet.localPosition = new Vector3(-Mathf.Abs(pet.localPosition.x), pet.localPosition.y,0);
+            }
         }
     }
 
     /// <summary>
-    /// ÇÃ·¹ÀÌ¾î°¡ Player.Jump¸¦ ´­·¶À» ¶§ Á¡ÇÁ¸¦ ½ÃµµÇÔ
+    /// í”Œë ˆì´ì–´ê°€ Player.Jumpë¥¼ ëˆŒë €ì„ ë•Œ ì í”„ë¥¼ ì‹œë„í•¨
     /// </summary>
     /// <param name="_context"></param>
     void TryJump(InputAction.CallbackContext _context)
     {
-        //ÇöÀç ÀÏ¹İ Á¡ÇÁÀÎÁö °øÁß Á¡ÇÁÀÎÁö ±¸ºĞÇÏ´Â Á¶°Ç ¾øÀ½
-        //Ãß°¡ÇØ¾ßÇÔ
+        //í˜„ì¬ ì¼ë°˜ ì í”„ì¸ì§€ ê³µì¤‘ ì í”„ì¸ì§€ êµ¬ë¶„í•˜ëŠ” ì¡°ê±´ ì—†ìŒ
+        //ì¶”ê°€í•´ì•¼í•¨
         if (conditions.isGround == false /*&& jumpStats.extraJumpCounter < 1*/)
         {
-            //Debug.Log("Á¡ÇÁ ºÒ°¡: °øÁß Á¡ÇÁ È½¼ö ¸ğµÎ ¼ÒÁø");
-            Debug.Log("Á¡ÇÁ ºÒ°¡: Ground°¡ ¾Æ´Ô");
+            //Debug.Log("ì í”„ ë¶ˆê°€: ê³µì¤‘ ì í”„ íšŸìˆ˜ ëª¨ë‘ ì†Œì§„");
+            Debug.Log("ì í”„ ë¶ˆê°€: Groundê°€ ì•„ë‹˜");
             return;
         }
         if (jumpStats.jumpCooldownCounter > 0f)
         {
-            Debug.Log("Á¡ÇÁ ºÒ°¡: Äğ´Ù¿îÁß");
+            Debug.Log("ì í”„ ë¶ˆê°€: ì¿¨ë‹¤ìš´ì¤‘");
             return;
         }
 
         
-        //else if (conditions.isGround == false && grappling.isAttatch == false)  //°øÁßÀÎµ¥ ¿ÍÀÌ¾î¾×¼Ç ¾ÈÇÒ°æ¿ì
+        //else if (conditions.isGround == false && grappling.isAttatch == false)  //ê³µì¤‘ì¸ë° ì™€ì´ì–´ì•¡ì…˜ ì•ˆí• ê²½ìš°
         //{
         //    jumpStats.extraJumpCounter -= 1;
         //}
 
-        if (grappling.isAttatch == false) //°øÁßÀÎµ¥ ¿ÍÀÌ¾î¾×¼Ç ÁßÀÏ °æ¿ì Á¡ÇÁX
+        if (grappling.isAttatch == false) //ê³µì¤‘ì¸ë° ì™€ì´ì–´ì•¡ì…˜ ì¤‘ì¼ ê²½ìš° ì í”„X
             Jump();
     }
 
+    void Dash()
+    {
+        if (!conditions.isRoll)
+        {
+            rb2d.velocity = conditions.DashDir * conditions.DashSpeed;
+        }
+
+        conditions.CurrDashTimer -= Time.deltaTime;
+
+        if (conditions.CurrDashTimer <= 0)
+        {
+            conditions.isDash = false;
+            conditions.isRoll = false;
+            animator.SetBool("_Dash", false);
+        }
+    }
+
     /// <summary>
-    /// Á¡ÇÁ¸¦ ½ÇÇà½ÃÅ°´Â ¸Ş¼Òµå
+    /// ì í”„ë¥¼ ì‹¤í–‰ì‹œí‚¤ëŠ” ë©”ì†Œë“œ
     /// </summary>
     void Jump()
     {
@@ -267,21 +310,21 @@ public class MovementController : MonoBehaviour
         {
             finalJumpForce = jumpStats.highestJumpHeight;
         }
-        /* À§ ³»¿ëÀÌ¶û °°Àº È¿°ú
-        if (movement.x != 0) //ÁÂ ¶Ç´Â ¿ì·Î ÀÌµ¿Áß(A or DÅ° ´©¸§)
+        /* ìœ„ ë‚´ìš©ì´ë‘ ê°™ì€ íš¨ê³¼
+        if (movement.x != 0) //ì¢Œ ë˜ëŠ” ìš°ë¡œ ì´ë™ì¤‘(A or Dí‚¤ ëˆ„ë¦„)
         {
             finalJumpForce = jumpStats.baseJumpHeight;
         }
-        else if (conditions.pressedWKey) //WÅ°°¡ ´­¸° »óÅÂ¶ó¸é
+        else if (conditions.pressedWKey) //Wí‚¤ê°€ ëˆŒë¦° ìƒíƒœë¼ë©´
         {
             finalJumpForce = jumpStats.highestJumpHeight;
         }
-        else //!(ÀÌµ¿Áß && WÅ° ´­¸²) == Idle
+        else //!(ì´ë™ì¤‘ && Wí‚¤ ëˆŒë¦¼) == Idle
         {
             finalJumpForce = jumpStats.baseJumpHeight;
         }
         */
-        //¶³¾îÁö´Â »óÅÂ¿¡¼­ Á¡ÇÁ¸¦ ÇßÀ» ¶§(velocity.y < 0) AddForce¸¦ ÀÇµµÇÑ´ë·Î ÀÛµ¿½ÃÅ°±â À§ÇØ velocity.y = 0À¸·Î ÃÊ±âÈ­
+        //ë–¨ì–´ì§€ëŠ” ìƒíƒœì—ì„œ ì í”„ë¥¼ í–ˆì„ ë•Œ(velocity.y < 0) AddForceë¥¼ ì˜ë„í•œëŒ€ë¡œ ì‘ë™ì‹œí‚¤ê¸° ìœ„í•´ velocity.y = 0ìœ¼ë¡œ ì´ˆê¸°í™”
         rb2d.velocity = new Vector2(rb2d.velocity.x, 0);
         rb2d.AddForce(new Vector2(0, finalJumpForce), ForceMode2D.Impulse);
 
@@ -291,18 +334,18 @@ public class MovementController : MonoBehaviour
         animator.SetBool("_Jump", true);
         animator.Play("Jump");
 
-        if (rb2d.velocity.x != 0) //Á¡ÇÁ´ç½Ã ÁÂ/¿ì ÀÌµ¿ÁßÀÌ¾ú´Ù¸é
+        if (rb2d.velocity.x != 0) //ì í”„ë‹¹ì‹œ ì¢Œ/ìš° ì´ë™ì¤‘ì´ì—ˆë‹¤ë©´
         {
             HorizontalAcceleration(rb2d, jumpStats.accelerationMagnification);
         }
     }
 
     /// <summary>
-    /// ¼öÆò ¹æÇâÀ¸·Î °¡¼Óµµ¸¦ ÁÖ´Â ¿ªÇÒ.
-    /// <br />Á¡ÇÁ ½Ã °¡¼ÓÀ» ÁÖ´Â µ¥ »ç¿ë
+    /// ìˆ˜í‰ ë°©í–¥ìœ¼ë¡œ ê°€ì†ë„ë¥¼ ì£¼ëŠ” ì—­í• .
+    /// <br />ì í”„ ì‹œ ê°€ì†ì„ ì£¼ëŠ” ë° ì‚¬ìš©
     /// </summary>
-    /// <param name="_playerRb2D">ÇÃ·¹ÀÌ¾îÀÇ Rigidbody2D Component</param>
-    /// <param name="_accelerationMagnification">°¡¼Ó·® ¹èÀ²</param>
+    /// <param name="_playerRb2D">í”Œë ˆì´ì–´ì˜ Rigidbody2D Component</param>
+    /// <param name="_accelerationMagnification">ê°€ì†ëŸ‰ ë°°ìœ¨</param>
     void HorizontalAcceleration(Rigidbody2D _playerRb2D, float _accelerationMagnification)
     {
         float accelerationAmount = _playerRb2D.velocity.x;
@@ -323,7 +366,7 @@ public class MovementController : MonoBehaviour
         }
         else
         {
-            Debug.LogError("¿¡·¯: ÄÚµå È®ÀÎ¹Ù¶÷");
+            Debug.LogError("ì—ëŸ¬: ì½”ë“œ í™•ì¸ë°”ëŒ");
         }
     }
 
@@ -339,23 +382,23 @@ public class MovementController : MonoBehaviour
         }
         else
         {
-            Debug.LogError("¿¡·¯: ÄÚµå È®ÀÎ¹Ù¶÷");
+            Debug.LogError("ì—ëŸ¬: ì½”ë“œ í™•ì¸ë°”ëŒ");
         }
     }
 
-    ///Á¡ÇÁ ±¸Çö ¹æ½Ä
-    ///ÇÊ¿ä º¯¼ö: 
-    ///Á¡ÇÁ °£ Äğ´Ù¿î(2´Ü Á¡ÇÁÀÌ±â ¶§¹®¿¡)
-    ///ÇöÀç Á¡ÇÁÁßÀÎÁö(2´Ü Á¡ÇÁ ¸ğ¼ÇÀÌ ÀÖÀ» °æ¿ì)
-    ///ÇöÀç ¶¥À» ¹â°í ÀÖ´ÂÁö(±âº» Á¡ÇÁ, Ãß°¡ Á¡ÇÁ ±¸ºĞ)
-    ///ÇÊ¿ä Çàµ¿: 
-    ///ÇÃ·¹ÀÌ¾î °ÔÀÓ ¿ÀºêÁ§Æ®°¡ °¡Áø Player.cs°´Ã¼(ÄÄÆ÷³ÍÆ®)ÀÇ ChangeState()¸¦ »ç¿ëÇÏ¿©
-    ///ÇöÀç »óÅÂ¸¦ ÀüÈ¯ÇÏ´Â ÇàÀ§°¡ ÇÊ¿äÇÔ
-    ///Á¶°Ç ¹× ¼Ó¼º: 
-    ///Á¡ÇÁ¹öÆ° ÀÌÀü¿¡ ´©¸¥ Å°(Á¶ÇÕÅ°)¸¦ ÆÇ´ÜÇÏ´Â ÇàÀ§ ÇÊ¿ä
+    ///ì í”„ êµ¬í˜„ ë°©ì‹
+    ///í•„ìš” ë³€ìˆ˜: 
+    ///ì í”„ ê°„ ì¿¨ë‹¤ìš´(2ë‹¨ ì í”„ì´ê¸° ë•Œë¬¸ì—)
+    ///í˜„ì¬ ì í”„ì¤‘ì¸ì§€(2ë‹¨ ì í”„ ëª¨ì…˜ì´ ìˆì„ ê²½ìš°)
+    ///í˜„ì¬ ë•…ì„ ë°Ÿê³  ìˆëŠ”ì§€(ê¸°ë³¸ ì í”„, ì¶”ê°€ ì í”„ êµ¬ë¶„)
+    ///í•„ìš” í–‰ë™: 
+    ///í”Œë ˆì´ì–´ ê²Œì„ ì˜¤ë¸Œì íŠ¸ê°€ ê°€ì§„ Player.csê°ì²´(ì»´í¬ë„ŒíŠ¸)ì˜ ChangeState()ë¥¼ ì‚¬ìš©í•˜ì—¬
+    ///í˜„ì¬ ìƒíƒœë¥¼ ì „í™˜í•˜ëŠ” í–‰ìœ„ê°€ í•„ìš”í•¨
+    ///ì¡°ê±´ ë° ì†ì„±: 
+    ///ì í”„ë²„íŠ¼ ì´ì „ì— ëˆ„ë¥¸ í‚¤(ì¡°í•©í‚¤)ë¥¼ íŒë‹¨í•˜ëŠ” í–‰ìœ„ í•„ìš”
     ///
     /// bool isGround;
     /// int extraJumpCount
     /// 
-    ///velocity.y°¡ À½¼ö¶ó¸é ¶³¾îÁö´ÂÁßÀÌ´Ï ±×¶§ falling AnimationÀ» ½ÇÇà?
+    ///velocity.yê°€ ìŒìˆ˜ë¼ë©´ ë–¨ì–´ì§€ëŠ”ì¤‘ì´ë‹ˆ ê·¸ë•Œ falling Animationì„ ì‹¤í–‰?
 }

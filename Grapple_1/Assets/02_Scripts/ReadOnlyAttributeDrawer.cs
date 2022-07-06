@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 
 /*출처: https://openlevel.postype.com/post/683234 */

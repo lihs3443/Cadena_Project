@@ -4,132 +4,129 @@ using UnityEngine;
 
 public class Grappling : MonoBehaviour
 {
-    public LineRenderer line;       // ÇÃ·¹ÀÌ¾î¿Í ÈÅ°£ÀÇ ¶óÀÎ ÀÌÆåÆ®
-    public Transform hook;          // ÈÅÀÇ À§Ä¡
-    public Vector3 PlayerPos;       // ÇÃ·¹ÀÌ¾î À§Ä¡, Ã¹ À§Ä¡ Á¶Á¤À» À§ÇÑ º¯¼ö
-    SpriteRenderer sprite;          // ÈÅ ¹ß»çÇÒ ¶§ ¸¶¿ì½º ¹æÇâÀ¸·Î Ä³¸¯ÅÍ°¡ ¹Ù¶óº¸µµ·Ï ÇÒ º¯¼ö
-    Vector2 MousePos;               // ¸¶¿ì½º À§Ä¡
+    public LineRenderer line;                  // í”Œë ˆì´ì–´ì™€ ê°ˆê³ ë¦¬ê°„ì˜ ë¼ì¸ ì´í™íŠ¸
+    public Transform hook;                     // í›…ì˜ ìœ„ì¹˜
+    [ReadOnly] public Vector3 PlayerPos;       // í”Œë ˆì´ì–´ ìœ„ì¹˜, ì²« ìœ„ì¹˜ ì¡°ì •ì„ ìœ„í•œ ë³€ìˆ˜
+    SpriteRenderer sprite;                     // í›… ë°œì‚¬í•  ë•Œ ë§ˆìš°ìŠ¤ ë°©í–¥ìœ¼ë¡œ ìºë¦­í„°ê°€ ë°”ë¼ë³´ë„ë¡ í•  ë³€ìˆ˜
+    Vector2 MousePos;                          // ë§ˆìš°ìŠ¤ ìœ„ì¹˜
     float HookAngle;
     Animator animator;
+    MovementController movectr;
 
-    public float HookSpeed;         // ÈÅ ³¯¾Æ°¡´Â ¼Óµµ
-    public float HookRange;         // ÈÅ »ç°Å¸®
-    public float HookReturnSpeed;   // ÈÅ µ¹¾Æ¿À´Â ¼Óµµ
-    public float HookHoldSpeed;     // ÈÅ ´ç±â´Â ¼Óµµ
+    public float HookSpeed;                    // í›… ë‚ ì•„ê°€ëŠ” ì†ë„
+    public float HookRange;                    // í›… ì‚¬ê±°ë¦¬
+    public float HookHoldSpeed;                // í›… ë‹¹ê¸°ëŠ” ì†ë„
+    public float cameraShakeduration;          // í›…ì´ ë¶™ì—ˆì„ ë•Œ ì¹´ë©”ë¼ í”ë“¤ë¦¼ ë¹ˆë„(ì‹œê°„)
+    public float cameraShakeMagnitude;         // í›…ì´ ë¶™ì—ˆì„ ë•Œ ì¹´ë©”ë¼ í”ë“¤ë¦¼ ê°•ë„(ì„¸ê¸°)
 
-    public bool isHookActive;       // ÈÅÀÌ ³¯¾Æ°¬À» ¶§ true
-    public bool isMaxRangeLimit;    // ÈÅÀÌ ÇÑ°èÁ¡±îÁö µµ´ŞÇßÀ» ¶§ true
-    public bool isAttatch;          // ÈÅÀÌ ºÙ¾úÀ» °æ¿ì true
+    [ReadOnly] public bool isHookActive;       // í›…ì´ ë‚ ì•„ê°”ì„ ë•Œ true
+    [ReadOnly] public bool isMaxRangeLimit;    // í›…ì´ í•œê³„ì ê¹Œì§€ ë„ë‹¬í–ˆì„ ë•Œ true
+    [ReadOnly] public bool isAttatch;          // í›…ì´ ë¶™ì—ˆì„ ê²½ìš° true
 
     void Start()
     {
-        animator = GetComponent<Animator>();        // ¾Ö´Ï¸ŞÀÌ¼Ç º¯¼ö
-        sprite = GetComponent<SpriteRenderer>();    // ÈÅÀ» ¹ß»çÇÏ´Â ¹æÇâÀ» ¹Ù¶óº¸µµ·Ï ÇÏ±â À§ÇÑ º¯¼ö
-        PlayerPos = transform.position;             // ÈÅÀÌ ³ª¿À´Â À§Ä¡ Á¶Á¤
+        animator = GetComponent<Animator>();        // ì• ë‹ˆë©”ì´ì…˜ ë³€ìˆ˜
+        sprite = GetComponent<SpriteRenderer>();    // í›…ì„ ë°œì‚¬í•˜ëŠ” ë°©í–¥ì„ ë°”ë¼ë³´ë„ë¡ í•˜ê¸° ìœ„í•œ ë³€ìˆ˜
+        movectr = GetComponent<MovementController>();
+        PlayerPos = transform.position;             // í›…ì´ ë‚˜ì˜¤ëŠ” ìœ„ì¹˜ ì¡°ì •
         isHookActive = false;
         isMaxRangeLimit = false;
         isAttatch = false;
         hook.gameObject.SetActive(false);
 
-// ÃÊ±â°ª ¼³Á¤(¿ÜºÎ ¼³Á¤ ¾ÈÇÒ °æ¿ì)
+// ì´ˆê¸°ê°’ ì„¤ì •(ì™¸ë¶€ ì„¤ì • ì•ˆí•  ê²½ìš°)
 //        HookSpeed = 50f;
 //        HookRange = 10f;
-        HookReturnSpeed = 30f;
         HookHoldSpeed = 3f;
 
-        line.positionCount = 2;                     // ¶óÀÎÀ» ±×¸®´Â À§Ä¡ÀÇ °³¼ö
-        line.endWidth = line.startWidth = 0.02f;    // ¶óÀÎÀÇ µÎ²²
-        line.SetPosition(0, PlayerPos);             // ¶óÀÎÀ» ±×¸®´Â ½ÃÀÛÁ¡ÀÇ À§Ä¡, ÇÃ·¹ÀÌ¾îÀÇ À§Ä¡
-        line.SetPosition(1, hook.position);         // ¶óÀÎÀ» ±×¸®´Â ¸¶Áö¸·Á¡ÀÇ À§Ä¡, ÈÅÀÇ À§Ä¡
+        line.positionCount = 2;                     // ë¼ì¸ì„ ê·¸ë¦¬ëŠ” ìœ„ì¹˜ì˜ ê°œìˆ˜
+        line.endWidth = line.startWidth = 0.02f;    // ë¼ì¸ì˜ ë‘ê»˜
+        line.SetPosition(0, PlayerPos);             // ë¼ì¸ì„ ê·¸ë¦¬ëŠ” ì‹œì‘ì ì˜ ìœ„ì¹˜, í”Œë ˆì´ì–´ì˜ ìœ„ì¹˜
+        line.SetPosition(1, hook.position);         // ë¼ì¸ì„ ê·¸ë¦¬ëŠ” ë§ˆì§€ë§‰ì ì˜ ìœ„ì¹˜, í›…ì˜ ìœ„ì¹˜
         line.useWorldSpace = true;
     }
 
     void Update()
     {
         PlayerPos = transform.position;    
-        line.SetPosition(0, PlayerPos);             // ¶óÀÎÀ» ±×¸®´Â ½ÃÀÛÁ¡ÀÇ À§Ä¡, ÇÃ·¹ÀÌ¾îÀÇ À§Ä¡
-        line.SetPosition(1, hook.position);         // ¶óÀÎÀ» ±×¸®´Â ¸¶Áö¸·Á¡ÀÇ À§Ä¡, ÈÅÀÇ À§Ä¡
+        line.SetPosition(0, PlayerPos);             // ë¼ì¸ì„ ê·¸ë¦¬ëŠ” ì‹œì‘ì ì˜ ìœ„ì¹˜, í”Œë ˆì´ì–´ì˜ ìœ„ì¹˜
+        line.SetPosition(1, hook.position);         // ë¼ì¸ì„ ê·¸ë¦¬ëŠ” ë§ˆì§€ë§‰ì ì˜ ìœ„ì¹˜, í›…ì˜ ìœ„ì¹˜
 
-
-        // ¸¶¿ì½º ¿ŞÂÊÅ¬¸¯ && ÈÅÀÌ ²¨Á®ÀÖÀ½ && ¾ÈºÙ¾îÀÖÀ½
-        if (Input.GetMouseButtonDown(0) && !isHookActive && !isAttatch)
+        // ë§ˆìš°ìŠ¤ ì™¼ìª½í´ë¦­ && í›…ì´ êº¼ì ¸ìˆìŒ && ì•ˆë¶™ì–´ìˆìŒ && ë•…ì´ ì•„ë‹˜
+        if (Input.GetMouseButtonDown(0) && !isHookActive && !isAttatch && !movectr.conditions.isGround)
         {
-            hook.position = PlayerPos;                                                      // ÈÅ ½ÃÀÛÀ§Ä¡ °»½Å
-            MousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition) - PlayerPos;     // ¸¶¿ì½º¹æÇâ ¼³Á¤
+            hook.position = PlayerPos;                                                      // í›… ì‹œì‘ìœ„ì¹˜ ê°±ì‹ 
+            MousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition) - PlayerPos;     // ë§ˆìš°ìŠ¤ë°©í–¥ ì„¤ì •
 
-            HookAngle = Mathf.Atan2(MousePos.y, MousePos.x) * Mathf.Rad2Deg;                // ÈÅÀÇ ³¯¾Æ°¥ °¢µµ °è»ê
-            hook.transform.rotation = Quaternion.AngleAxis(HookAngle-90,Vector3.forward);   // ÈÅÀÇ °¢µµ º¯°æ
+            HookAngle = Mathf.Atan2(MousePos.y, MousePos.x) * Mathf.Rad2Deg;                // í›…ì˜ ë‚ ì•„ê°ˆ ê°ë„ ê³„ì‚°
+            hook.transform.rotation = Quaternion.AngleAxis(HookAngle-90,Vector3.forward);   // í›…ì˜ ê°ë„ ë³€ê²½
 
-            if (MousePos.x > 0)                                                             // ¸¶¿ì½º°¡ Ä³¸¯ÅÍ ¿ŞÂÊ¿¡ ÀÖÀ» °æ¿ì ¿ŞÂÊ ¹Ù¶óº¸±â
-                sprite.flipX = true;                                            // ÈÅ ¹ß»ç½Ã
-            if (MousePos.x < 0)                                                             // ¸¶¿ì½º°¡ Ä³¸¯ÅÍ ¿À¸¥ÂÊ¿¡ ÀÖÀ» °æ¿ì ¿À¸¥ÂÊ ¹Ù¶óº¸±â
+            if (MousePos.x > 0)                                                             // ë§ˆìš°ìŠ¤ê°€ ìºë¦­í„° ì™¼ìª½ì— ìˆì„ ê²½ìš° ì™¼ìª½ ë°”ë¼ë³´ê¸°
+                sprite.flipX = true;                                            // í›… ë°œì‚¬ì‹œ
+            if (MousePos.x < 0)                                                             // ë§ˆìš°ìŠ¤ê°€ ìºë¦­í„° ì˜¤ë¥¸ìª½ì— ìˆì„ ê²½ìš° ì˜¤ë¥¸ìª½ ë°”ë¼ë³´ê¸°
                 sprite.flipX = false;
 
-            animator.SetBool("_WireShoting", true);                                         // ¿ÍÀÌ¾î ¹ß»ç ¾Ö´Ï¸ŞÀÌ¼Ç on
+            animator.SetBool("_WireShoting", true);                                         // ì™€ì´ì–´ ë°œì‚¬ ì• ë‹ˆë©”ì´ì…˜ on
 
-            isHookActive = true;                                                            // ÈÅ on
+            isHookActive = true;                                                            // í›… on
             isMaxRangeLimit = false;
-            hook.gameObject.SetActive(true);                                                // ÈÅ ¿ÀºêÁ§Æ® on
+            hook.gameObject.SetActive(true);                                                // í›… ì˜¤ë¸Œì íŠ¸ on
         }
 
         if(Input.GetMouseButtonUp(0))
         {
-            animator.SetBool("_WireShoting", false);                                        // ¿ÍÀÌ¾î ¹ß»ç ¾Ö´Ï¸ŞÀÌ¼Ç off
+            animator.SetBool("_WireShoting", false);                                        // ì™€ì´ì–´ ë°œì‚¬ ì• ë‹ˆë©”ì´ì…˜ off
         }
 
-        // ÈÅÀº ÄÑÁ®ÀÖÀ½ && ÃÖ´ë»ç°Å¸® µµ´Ş ¾ÈÇÔ && ¾ÈºÙ¾îÀÖÀ½
+        // í›…ì€ ì¼œì ¸ìˆìŒ && ìµœëŒ€ì‚¬ê±°ë¦¬ ë„ë‹¬ ì•ˆí•¨ && ì•ˆë¶™ì–´ìˆìŒ
         if (isHookActive && !isMaxRangeLimit && !isAttatch)
         {
-            hook.Translate(Vector2.up * Time.deltaTime * HookSpeed);                   // ÈÅ ³¯¾Æ°¨
+            hook.Translate(Vector2.up * Time.deltaTime * HookSpeed);                   // í›… ë‚ ì•„ê°
 
-            if (Vector2.Distance(PlayerPos, hook.position) > HookRange)                // ÈÅ »ç°Å¸®¸¸Å­ ³¯¾Æ°¡¸é    
+            if (Vector2.Distance(PlayerPos, hook.position) > HookRange)                // í›… ì‚¬ê±°ë¦¬ë§Œí¼ ë‚ ì•„ê°€ë©´    
                 isMaxRangeLimit = true;
         }
         
-        // ÈÅÀÌ ÄÑÁ®ÀÖÀ½ && ÃÖ´ë»ç°Å¸® µµ´ŞÇÔ && ¾ÈºÙ¾îÀÖÀ½
+        // í›…ì´ ì¼œì ¸ìˆìŒ && ìµœëŒ€ì‚¬ê±°ë¦¬ ë„ë‹¬í•¨ && ì•ˆë¶™ì–´ìˆìŒ
         if (isHookActive && isMaxRangeLimit && !isAttatch)
         {
             isHookActive = false;
             isMaxRangeLimit = false;
             hook.gameObject.SetActive(false);
-
-            // ÈÅÀÌ ÃÖ´ë »ç°Å¸®¿¡ µµ´ŞÇßÀ» ¶§ ÈÅÀÌ µ¹¾Æ¿À´Â °úÁ¤
-            //hook.position = Vector2.MoveTowards(hook.position, PlayerPos, Time.deltaTime * HookReturnSpeed);    // ÈÅ µ¹¾Æ¿È
-            //if (Vector2.Distance(PlayerPos, hook.position) < 0.1f)  // ÈÅÀÌ µ¹¾Æ¿ÔÀ» ¶§
-            //{
-            //    isHookActive = false;                               // ÈÅ »ç¿ë°¡´É »óÅÂ
-            //    isMaxRangeLimit = false;                            // ÈÅ ÃÖ´ë»ç°Å¸® µµ´Ş ¾ÈµÈ »óÅÂ
-            //    hook.gameObject.SetActive(false);                   // ¿ÀºêÁ§Æ® off
-            //}
         }
 
-        // ÈÅÀÌ ºÙ¾úÀ» ¶§
+        // í›…ì´ ë¶™ì—ˆì„ ë•Œ
         if (isAttatch)
         {
-            // Ãæµ¹½Ã ¿ÍÀÌ¾î È¸¼ö¸¦ À§ÇÑ Ray ¿´´ø °Í..
-            //RaycastHit2D LrayHit = Physics2D.Raycast(PlayerPos, Vector2.left, 0.35f, 1 << 8);   // ÇÃ·¹ÀÌ¾î°¡ ¿ŞÂÊ º®°ú Ãæµ¹½Ã °¥°í¸® È¸¼ö¸¦ ÇÏ±â À§ÇÑ Ray
-            //RaycastHit2D RrayHit = Physics2D.Raycast(PlayerPos, Vector2.right, 0.35f, 1 << 8);  // ÇÃ·¹ÀÌ¾î°¡ ¿À¸¥ÂÊ º®°ú Ãæµ¹½Ã °¥°í¸® È¸¼ö¸¦ ÇÏ±â À§ÇÑ Ray
-            //RaycastHit2D UrayHit = Physics2D.Raycast(PlayerPos, Vector2.up, 0.50f, 1 << 8);     // ÇÃ·¹ÀÌ¾î°¡ À§ÂÊ º®°ú Ãæµ¹½Ã °¥°í¸® È¸¼ö¸¦ ÇÏ±â À§ÇÑ Ray
-            //RaycastHit2D DrayHit = Physics2D.Raycast(PlayerPos, Vector2.down, 1.33f, 1 << 8);   // ÇÃ·¹ÀÌ¾î°¡ ¾Æ·¡ÂÊ º®°ú Ãæµ¹½Ã °¥°í¸® È¸¼ö¸¦ ÇÏ±â À§ÇÑ Ray
+            /// ë¸”ë Œë“œ íŠ¸ë¦¬ë¥¼ ì´ìš©í•œ ì• ë‹ˆë©”ì´ì…˜ ì²˜ë¦¬ë¥¼ ìœ„í•œ ì‘ì—…
+            float Hookdistance = (line.GetPosition(1) - line.GetPosition(0)).magnitude; // í›… ê¸¸ì´
+            float distanceX = line.GetPosition(1).x - line.GetPosition(0).x;            // í›…ê³¼ í”Œë ˆì´ì–´ì˜ Xì¶• ê°„ê²©
 
-            if (Input.GetKeyDown(KeyCode.Space))                    // ¿ŞÂÊÅ¬¸¯ ÇÑ¹ø ´õ ´©¸¦ ½Ã
+            if (!sprite.flipX)
+                distanceX = -distanceX;
+            animator.SetBool("_Hanging", true);
+            animator.SetFloat("HangingAngle", 0.5f + (distanceX / Hookdistance));       // 1 -> 0 ë°©í–¥ìœ¼ë¡œ ì• ë‹ˆë©”ì´ì…˜ ì‘ë™
+            
+
+            if (Input.GetKeyDown(KeyCode.Space))                    // ìŠ¤í˜ì´ìŠ¤ë°” ëˆ„ë¥¼ ì‹œ
             {
-                Hookoff();                                          // ÈÅ ²ô´Â ÇÔ¼ö
+                Hookoff();                                          // í›… ë„ëŠ” í•¨ìˆ˜
             }
 
-            if (Input.GetMouseButton(1))                            // ¿À¸¥ÂÊ Å¬¸¯À» ÇÏ¸é
+            if (Input.GetMouseButton(1))                            // ì˜¤ë¥¸ìª½ í´ë¦­ì„ í•˜ë©´
             {                                                                                 
-                hook.GetComponent<Hook>().joint.distance -= HookHoldSpeed * 0.003f;// ÇÃ·¹ÀÌ¾î ¹æÇâ ÂÊÀ¸·Î ÈÅ ±æÀÌ ÁÙÀÌ±â 
+                hook.GetComponent<Hook>().playerToHookJoint.distance -= HookHoldSpeed * 0.003f;// í”Œë ˆì´ì–´ ë°©í–¥ ìª½ìœ¼ë¡œ í›… ê¸¸ì´ ì¤„ì´ê¸° 
             }
         }
     }
 
     public void Hookoff()
     {
-        isAttatch = false;                                  // ¾ÈºÙÀº »ıÅÂ
-        isHookActive = false;                               // ÈÅ »ç¿ë°¡´É »óÅÂ
-        isMaxRangeLimit = false;                            // ÈÅ ÃÖ´ë»ç°Å¸® µµ´Ş ¾ÈµÈ »óÅÂ
-        hook.GetComponent<Hook>().joint.enabled = false;    // ÈÅ ¶¼±â
-        hook.gameObject.SetActive(false);                   // ¿ÀºêÁ§Æ® off
+        isAttatch = false;                                  // ì•ˆë¶™ì€ ìƒíƒœ
+        isHookActive = false;                               // í›… ì‚¬ìš©ê°€ëŠ¥ ìƒíƒœ
+        isMaxRangeLimit = false;                            // í›… ìµœëŒ€ì‚¬ê±°ë¦¬ ë„ë‹¬ ì•ˆëœ ìƒíƒœ
+        hook.GetComponent<Hook>().playerToHookJoint.enabled = false;    // í›… ë–¼ê¸°
+        hook.gameObject.SetActive(false);                   // ì˜¤ë¸Œì íŠ¸ off
+        animator.SetBool("_Hanging", false);                // ë§¤ë‹¬ë¦¬ê¸° ì• ë‹ˆë©”ì´ì…˜ off
     }
 }

@@ -5,13 +5,13 @@ using UnityEngine;
 public abstract class Tool : Item
 {
     /// <summary>
-    /// Å° ÀÔ·Â µîÀ¸·Î ÇØ´ç ¾ÆÀÌÅÛÀ» »ç¿ëÇÏ·Á°í ½ÃµµÇÒ ¶§ ÄğÅ¸ÀÓ µî Á¶°ÇÀ» Ã¼Å©
+    /// í‚¤ ì…ë ¥ ë“±ìœ¼ë¡œ í•´ë‹¹ ì•„ì´í…œì„ ì‚¬ìš©í•˜ë ¤ê³  ì‹œë„í•  ë•Œ ì¿¨íƒ€ì„ ë“± ì¡°ê±´ì„ ì²´í¬
     /// </summary>
-    /// <returns>»ç¿ë ¼º°ø ¿©ºÎ</returns>
+    /// <returns>ì‚¬ìš© ì„±ê³µ ì—¬ë¶€</returns>
     public abstract bool TryUse();
 
     /// <summary>
-    /// ÇØ´ç µµ±¸ »ç¿ë ½ÃÀÇ ÇàÀ§
+    /// í•´ë‹¹ ë„êµ¬ ì‚¬ìš© ì‹œì˜ í–‰ìœ„
     /// </summary>
     protected abstract void UseEffect();
 }

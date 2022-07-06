@@ -7,8 +7,8 @@ public class Item : MonoBehaviour
     [System.Serializable]
     public struct ItemInfo
     {
-        [Tooltip("¾ÆÀÌÅÛ ÀÌ¸§")] public string name;
-        [Tooltip("¾ÆÀÌÅÛ ¼³¸í")] public string itemDescription;
+        [Tooltip("ì•„ì´í…œ ì´ë¦„")] public string name;
+        [Tooltip("ì•„ì´í…œ ì„¤ëª…")] public string itemDescription;
     }
 
     [SerializeField] protected ItemInfo itemInfo;
@@ -20,7 +20,7 @@ public class Item : MonoBehaviour
     }
 
     /// <summary>
-    /// °´Ã¼°¡ »ı¼ºµÉ ¶§, ¾ÆÀÌÅÛ Á¤º¸¸¦ °¡Á®¿À´Â ¿ªÇÒ(¼³¸í µî)
+    /// ê°ì²´ê°€ ìƒì„±ë  ë•Œ, ì•„ì´í…œ ì •ë³´ë¥¼ ê°€ì ¸ì˜¤ëŠ” ì—­í• (ì„¤ëª… ë“±)
     /// </summary>
     void GetInfoAtCSV()
     {

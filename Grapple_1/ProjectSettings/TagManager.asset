@@ -9,6 +9,7 @@ TagManager:
   - Wall
   - CatchableObject
   - InstantKillTrap
+  - CMvcam
   layers:
   - Default
   - TransparentFX
