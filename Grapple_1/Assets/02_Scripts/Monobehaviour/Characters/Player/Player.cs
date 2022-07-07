@@ -20,7 +20,7 @@ public class Player : Character
     protected override void DeathAction()
     {
         StageManager.instance.tempStage0.RespawnPlayer(gameObject);
-        transform.GetComponent<Grappling>().Hookoff();                  // ë¦¬ìŠ¤í°ì‹œ í›… ë„ê¸°
+        transform.GetComponent<Grappling>().Hookoff();                  // ¸®½ºÆù½Ã ÈÅ ²ô±â
     }
 
     private void OnCollisionEnter2D(Collision2D _collision)

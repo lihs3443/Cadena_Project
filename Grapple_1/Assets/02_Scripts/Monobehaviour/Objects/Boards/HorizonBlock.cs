@@ -5,15 +5,15 @@ using UnityEngine;
 public class HorizonBlock : MonoBehaviour
 {
     [SerializeField]
-    float speed;    //ë¸”ëŸ­ ì´ë™ ì†ë„
+    float speed;    //ºí·° ÀÌµ¿ ¼Óµµ
     [SerializeField]
-    float minXpos;  //ìµœì†Œ x ì¢Œí‘œ   +ì´ëŸ°ê±´ ì˜¤ë¸Œì íŠ¸ ì¤‘ì‹¬ ê¸°ì¤€ìœ¼ë¡œ ê°’ì„ ì£¼ê³  ì‹¶ì€ë°
+    float minXpos;  //ÃÖ¼Ò x ÁÂÇ¥   +ÀÌ·±°Ç ¿ÀºêÁ§Æ® Áß½É ±âÁØÀ¸·Î °ªÀ» ÁÖ°í ½ÍÀºµ¥
     [SerializeField]
-    float maxXpos;  //ìµœëŒ€ x ì¢Œí‘œ
+    float maxXpos;  //ÃÖ´ë x ÁÂÇ¥
     [SerializeField]
-    float delay;    //ì¢…ì ì— ì–¼ë§ˆë‚˜ ì˜¤ë˜ ìœ„ì¹˜í•  ê²ƒì´ëƒ
-    float timer;    //ì‹œê°„ ì¸¡ì •ìš©
-    bool dirSwitch; //ë°©í–¥ ìŠ¤ìœ„ì¹˜. 0ì¼ ê²½ìš° ì˜¤ë¥¸ìª½ ì´ë™ë¶€í„°
+    float delay;    //Á¾Á¡¿¡ ¾ó¸¶³ª ¿À·¡ À§Ä¡ÇÒ °ÍÀÌ³Ä
+    float timer;    //½Ã°£ ÃøÁ¤¿ë
+    bool dirSwitch; //¹æÇâ ½ºÀ§Ä¡. 0ÀÏ °æ¿ì ¿À¸¥ÂÊ ÀÌµ¿ºÎÅÍ
 
     private void Awake()
     {

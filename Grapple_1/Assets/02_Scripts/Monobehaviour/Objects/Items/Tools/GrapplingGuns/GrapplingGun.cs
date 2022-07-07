@@ -6,21 +6,21 @@ public class GrapplingGun : Tool
 {
     [Space, Header("Hook Propertys:")]
     [SerializeField] protected GrabHook grabHook;
-    LineRenderer grappleLineRenderer; //ê·¸ë˜í”Œ ì‚¬ìš© ì‹œ ì´êµ¬ì™€ í›…ì„ ì„ ìœ¼ë¡œ ì´ì–´ì£¼ê¸° ìœ„í•´ ì‚¬ìš©(ì‹œê°ì  íš¨ê³¼)
+    LineRenderer grappleLineRenderer; //±×·¡ÇÃ »ç¿ë ½Ã ÃÑ±¸¿Í ÈÅÀ» ¼±À¸·Î ÀÌ¾îÁÖ±â À§ÇØ »ç¿ë(½Ã°¢Àû È¿°ú)
     [SerializeField] protected float useCooldown = 1.5f;
     /// <summary>
-    /// ì‚¬ìš©ì¤‘ì¸ì§€ì— ëŒ€í•œ ì—¬ë¶€
-    /// í•´ë‹¹ boolê°’ìœ¼ë¡œ ë¼ì¸ì„ ê·¸ë¦´ì§€ ë§ì§€ ë“±ì— ì‚¬ìš©
+    /// »ç¿ëÁßÀÎÁö¿¡ ´ëÇÑ ¿©ºÎ
+    /// ÇØ´ç bool°ªÀ¸·Î ¶óÀÎÀ» ±×¸±Áö ¸»Áö µî¿¡ »ç¿ë
     /// </summary>
     [SerializeField] protected bool inUse = false;
     [SerializeField] protected float cooldownCounter = 0f;
-    [SerializeField, Tooltip("ë²½ì´ë‚˜ ë°”ë‹¥ì— ê·¸ë© ê°€ëŠ¥")] bool canGrabWall = true;
-    [SerializeField, Tooltip("ì ì´ë‚˜ íŠ¹ì • ì˜¤ë¸Œì íŠ¸ ê·¸ë© ê°€ëŠ¥")] bool canGrabEntity = false;
+    [SerializeField, Tooltip("º®ÀÌ³ª ¹Ù´Ú¿¡ ±×·¦ °¡´É")] bool canGrabWall = true;
+    [SerializeField, Tooltip("ÀûÀÌ³ª Æ¯Á¤ ¿ÀºêÁ§Æ® ±×·¦ °¡´É")] bool canGrabEntity = false;
 
     [Space, Header("Hook Stats")]
-    [SerializeField, Tooltip("ë°œì‚¬ ì†ë„")] protected float launchVelocity = 0.2f;
-    [SerializeField, Tooltip("ë¶€ì°© ì„±ê³µì‹œ ë‹¹ê¸°ëŠ” ì†ë„")] protected float pullVelocity = 0.25f;
-    [SerializeField, Tooltip("ë°œì‚¬ê°€ ìœ ì§€ë˜ëŠ” ìµœëŒ€ ì‹œê°„")] protected float launchDuration = 0.67f;
+    [SerializeField, Tooltip("¹ß»ç ¼Óµµ")] protected float launchVelocity = 0.2f;
+    [SerializeField, Tooltip("ºÎÂø ¼º°ø½Ã ´ç±â´Â ¼Óµµ")] protected float pullVelocity = 0.25f;
+    [SerializeField, Tooltip("¹ß»ç°¡ À¯ÁöµÇ´Â ÃÖ´ë ½Ã°£")] protected float launchDuration = 0.67f;
 
 
     protected Coroutine Coroutine_fireGrab = null;
@@ -40,7 +40,7 @@ public class GrapplingGun : Tool
     {
         if (cooldownCounter > 0f)
         {
-            Debug.Log($"ì•„ì§ {gameObject.name}ì˜ ì‚¬ìš© ì¿¨ë‹¤ìš´ì´ {cooldownCounter:N2}ì´ˆ ë‚¨ì•˜ìŠµë‹ˆë‹¤!");
+            Debug.Log($"¾ÆÁ÷ {gameObject.name}ÀÇ »ç¿ë Äğ´Ù¿îÀÌ {cooldownCounter:N2}ÃÊ ³²¾Ò½À´Ï´Ù!");
             return false;
         }
         cooldownCounter = useCooldown;
@@ -50,10 +50,10 @@ public class GrapplingGun : Tool
     }
 
     /// <summary>
-    /// í›…ì´ ë²½ì— ê±¸ë ¸ì„ë•Œ í•  í–‰ìœ„
-    /// ì£¼: GrabHook.csì—ì„œ í˜¸ì¶œí•˜ëŠ” ìš©ë„
+    /// ÈÅÀÌ º®¿¡ °É·ÈÀ»¶§ ÇÒ ÇàÀ§
+    /// ÁÖ: GrabHook.cs¿¡¼­ È£ÃâÇÏ´Â ¿ëµµ
     /// </summary>
-    /// <param name="_grabbedPos">ê·¸ë©í›…ì´ ë¶€ë”ªíŒ ìœ„ì¹˜</param>
+    /// <param name="_grabbedPos">±×·¦ÈÅÀÌ ºÎµúÈù À§Ä¡</param>
     public virtual void HookOnTheWall(Vector2 _grabbedPos)
     {
         StopCoroutine(Coroutine_fireGrab);
@@ -61,10 +61,10 @@ public class GrapplingGun : Tool
     }
 
     /// <summary>
-    /// í›…ì´ ì—”í‹°í‹°(NPCë“±)ì—ê²Œ ê±¸ë ¸ì„ë•Œ í•  í–‰ìœ„
-    /// ì£¼: GrabHook.csì—ì„œ í˜¸ì¶œí•¨
+    /// ÈÅÀÌ ¿£Æ¼Æ¼(NPCµî)¿¡°Ô °É·ÈÀ»¶§ ÇÒ ÇàÀ§
+    /// ÁÖ: GrabHook.cs¿¡¼­ È£ÃâÇÔ
     /// </summary>
-    /// <param name="_grabbedPos">ê·¸ë©í›…ì´ ì¶©ëŒí•œ ìœ„ì¹˜</param>
+    /// <param name="_grabbedPos">±×·¦ÈÅÀÌ Ãæµ¹ÇÑ À§Ä¡</param>
     public virtual void HookOnEntity(Vector2 _grabbedPos)
     {
         StopCoroutine(Coroutine_fireGrab);
@@ -72,24 +72,24 @@ public class GrapplingGun : Tool
     }
 
     /// <summary>
-    /// ì‚¬ìš©ì´ ì¢…ë£Œëœ í›„ ì·¨í•  í–‰ë™
-    /// ê·¸ë©ì´ í”Œë ˆì´ì–´ì—ê²Œ ë‹¤ì‹œ ë˜ëŒì•„ì˜¨ ìƒí™© ë“±ì— ì‚¬ìš©
+    /// »ç¿ëÀÌ Á¾·áµÈ ÈÄ ÃëÇÒ Çàµ¿
+    /// ±×·¦ÀÌ ÇÃ·¹ÀÌ¾î¿¡°Ô ´Ù½Ã µÇµ¹¾Æ¿Â »óÈ² µî¿¡ »ç¿ë
     /// </summary>
     protected virtual void EndOfUse()
     {
         inUse = false;
-        cooldownCounter = useCooldown; //ì¿¨íƒ€ì„ ì´ˆê¸°í™” ë° ì‹œì‘
+        cooldownCounter = useCooldown; //ÄğÅ¸ÀÓ ÃÊ±âÈ­ ¹× ½ÃÀÛ
         grappleLineRenderer.gameObject.SetActive(false);
     }
 
     /// <summary>
-    /// GrabHookì„ ì‹¤ì œë¡œ ì›€ì§ì´ê²Œ í•˜ëŠ”(ë°œì‚¬í•˜ëŠ”)ì—­í• ì˜ ì½”ë£¨í‹´
-    /// ë§Œì•½ GrabHookì´ ë¬´ì–¸ê°€ì™€ ì ‘ì´‰í•˜ì˜€ë‹¤ë©´ ì½”ë£¨í‹´ì„ ì¢…ë£Œì‹œì¼œì•¼í•¨
+    /// GrabHookÀ» ½ÇÁ¦·Î ¿òÁ÷ÀÌ°Ô ÇÏ´Â(¹ß»çÇÏ´Â)¿ªÇÒÀÇ ÄÚ·çÆ¾
+    /// ¸¸¾à GrabHookÀÌ ¹«¾ğ°¡¿Í Á¢ÃËÇÏ¿´´Ù¸é ÄÚ·çÆ¾À» Á¾·á½ÃÄÑ¾ßÇÔ
     /// 
-    /// *ì£¼: í•´ë‹¹ ì—­í• ì„ GrabHookì—ê²Œ ë„˜ê²¨ì¤„ê²ƒ
+    /// *ÁÖ: ÇØ´ç ¿ªÇÒÀ» GrabHook¿¡°Ô ³Ñ°ÜÁÙ°Í
     /// 
     /// </summary>
-    /// <param name="_destination">ìµœì¢… ëª©ì ì§€ì ì˜ ë°©í–¥ì„ ì•Œê¸° ìœ„í•¨</param>
+    /// <param name="_destination">ÃÖÁ¾ ¸ñÀûÁöÁ¡ÀÇ ¹æÇâÀ» ¾Ë±â À§ÇÔ</param>
     /// <returns></returns>
     protected IEnumerator FireGrab(Vector2 _destination)
     {
@@ -101,14 +101,14 @@ public class GrapplingGun : Tool
         while (true)
         {
             launchDuration -= Time.deltaTime;
-            //grabHookì˜ ìœ„ì¹˜ë¥¼ ë³€í™”ì‹œí‚¤ëŠ” êµ¬ë¬¸ í•„ìš”
+            //grabHookÀÇ À§Ä¡¸¦ º¯È­½ÃÅ°´Â ±¸¹® ÇÊ¿ä
 
-            //ì§€ì†ì‹œê°„ì´ ëë‚¬ì„ ê²½ìš°
+            //Áö¼Ó½Ã°£ÀÌ ³¡³µÀ» °æ¿ì
             if (launchDuration <= 0f)
             {
-                inUse = false; //ì‚¬ìš©ì´ ëë‚¨
+                inUse = false; //»ç¿ëÀÌ ³¡³²
 
-                //ë‚ ì•„ê°„ ê·¸ë©ì„ ë‹¤ì‹œ ì œìë¦¬ë¡œ ëŒë ¤ë†“ëŠ” ì—°ì¶œìš©
+                //³¯¾Æ°£ ±×·¦À» ´Ù½Ã Á¦ÀÚ¸®·Î µ¹·Á³õ´Â ¿¬Ãâ¿ë
                 while (true)
                 {
                     yield return waitForEndOfFrame;
@@ -129,7 +129,7 @@ public class GrapplingGun : Tool
     }
 
     /// <summary>
-    /// ì§€ì†ì‹œê°„ì´ ëë‚œ ê·¸ë©ì„ ìì—°ìŠ¤ë ˆ ëŒë ¤ë†“ê¸° ìœ„í•œ ì—°ì¶œ ìš©ë„
+    /// Áö¼Ó½Ã°£ÀÌ ³¡³­ ±×·¦À» ÀÚ¿¬½º·¹ µ¹·Á³õ±â À§ÇÑ ¿¬Ãâ ¿ëµµ
     /// </summary>
     /// <returns></returns>
     protected IEnumerator ReturnGrab()
@@ -140,7 +140,7 @@ public class GrapplingGun : Tool
     }
 
     /// <summary>
-    /// ì‚¬ìš© í›„ ì¿¨íƒ€ì„ì„ ê´€ë¦¬í•˜ëŠ”(ë‹¤ì‹œ ì¤„ì—¬ì£¼ëŠ”) ì—­í• 
+    /// »ç¿ë ÈÄ ÄğÅ¸ÀÓÀ» °ü¸®ÇÏ´Â(´Ù½Ã ÁÙ¿©ÁÖ´Â) ¿ªÇÒ
     /// </summary>
     /// <returns></returns>
     protected IEnumerator CooldownManagement()
@@ -162,8 +162,8 @@ public class GrapplingGun : Tool
     Coroutine Coroutine_toggleHookLine = null;
 
     /// <summary>
-    /// ì½”ë£¨í‹´ì„ Toggleí•˜ê¸° ìœ„í•œ ë©”ì†Œë“œ.
-    /// Delegateë¥¼ í™œìš©í•˜ì—¬ ì™¸ë¶€ì—ì„œ Toggleì´ ê°€ëŠ¥í•˜ë„ë¡ ì„¤ê³„í•¨
+    /// ÄÚ·çÆ¾À» ToggleÇÏ±â À§ÇÑ ¸Ş¼Òµå.
+    /// Delegate¸¦ È°¿ëÇÏ¿© ¿ÜºÎ¿¡¼­ ToggleÀÌ °¡´ÉÇÏµµ·Ï ¼³°èÇÔ
     /// </summary>
     void ToggleConnectHookLine()
     {
@@ -180,8 +180,8 @@ public class GrapplingGun : Tool
     }
 
     /// <summary>
-    /// í›…ê³¼ ì´êµ¬ ì‚¬ì´ë¥¼ ì„ ìœ¼ë¡œ ì´ì–´ì£¼ëŠ” ì½”ë£¨í‹´. ë¬´í•œ ë£¨í”„ê¸° ë•Œë¬¸ì— ì‚¬ìš©ì´ ëë‚¬ë‹¤ë©´
-    /// ì™¸ë¶€ì—ì„œ StopCoroutineì„ í™œìš©í•˜ì—¬ ì¤‘ì§€ì‹œì¼œì£¼ì–´ì•¼í•¨.
+    /// ÈÅ°ú ÃÑ±¸ »çÀÌ¸¦ ¼±À¸·Î ÀÌ¾îÁÖ´Â ÄÚ·çÆ¾. ¹«ÇÑ ·çÇÁ±â ¶§¹®¿¡ »ç¿ëÀÌ ³¡³µ´Ù¸é
+    /// ¿ÜºÎ¿¡¼­ StopCoroutineÀ» È°¿ëÇÏ¿© ÁßÁö½ÃÄÑÁÖ¾î¾ßÇÔ.
     /// </summary>
     /// <returns></returns>
     IEnumerator ConnectHookLine()

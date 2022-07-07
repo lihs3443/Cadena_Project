@@ -2,16 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//í”Œë ˆì´ì–´ê°€ ë¡œí”„ë¥¼ ë§¤ë‹¬ê±°ë‚˜ ë¸”ëŸ­ ìœ„ì— ì˜¬ë¼ê°€ëŠ” ë“±
-//ë¸”ëŸ­ì— ë¬´ê²Œë¥¼ ê°€í•˜ëŠ” í–‰ìœ„ë¥¼ í•  ë•Œ ë‚´ë ¤ê°€ëŠ” ë¸”ëŸ­ìž…ë‹ˆë‹¤.
+//ÇÃ·¹ÀÌ¾î°¡ ·ÎÇÁ¸¦ ¸Å´Þ°Å³ª ºí·° À§¿¡ ¿Ã¶ó°¡´Â µî
+//ºí·°¿¡ ¹«°Ô¸¦ °¡ÇÏ´Â ÇàÀ§¸¦ ÇÒ ¶§ ³»·Á°¡´Â ºí·°ÀÔ´Ï´Ù.
 public class HangingBlock : MonoBehaviour
 {
-    public bool isHanging = false;  //ë§¤ë‹¬ë ¤ ìžˆëŠ”ì§€.. + ê± hookì´ë‚˜ grapplingì—ì„œ ë°›ì•„ì˜¤ëŠ”ê²Œ ë‚˜ì„ë“¯
-    public float speed = 3.0f;     //í•˜ê°• ì†ë„
-    public float landSpeed; //ìƒìŠ¹ ì†ë„
-    public float resetTime; //ìž…ë ¥ ì—†ì„ ì‹œ ì–¼ë§ˆ í›„ ìž¬ìœ„ì¹˜ í•˜ëŠ”ì§€
-    public float topPos;         //ìµœìƒ ì§€ì 
-    public float bottomPos;      //ìµœí•˜ ì§€ì 
+    public bool isHanging = false;  //¸Å´Þ·Á ÀÖ´ÂÁö.. + °Á hookÀÌ³ª grappling¿¡¼­ ¹Þ¾Æ¿À´Â°Ô ³ªÀ»µí
+    public float speed = 3.0f;     //ÇÏ°­ ¼Óµµ
+    public float landSpeed; //»ó½Â ¼Óµµ
+    public float resetTime; //ÀÔ·Â ¾øÀ» ½Ã ¾ó¸¶ ÈÄ ÀçÀ§Ä¡ ÇÏ´ÂÁö
+    public float topPos;         //ÃÖ»ó ÁöÁ¡
+    public float bottomPos;      //ÃÖÇÏ ÁöÁ¡
 
     
     
@@ -25,18 +25,18 @@ public class HangingBlock : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //í”Œë ˆì´ì–´ê°€ ë¸”ëŸ­ì— ë§¤ë‹¬ë ¤ ìžˆì„ ë•Œ
+        //ÇÃ·¹ÀÌ¾î°¡ ºí·°¿¡ ¸Å´Þ·Á ÀÖÀ» ¶§
         if(isHanging == true)
         {
-            if(transform.position.y >= bottomPos)//ë¸”ëŸ­ì´ ìµœí•˜ ì§€ì ì— ë„ë‹¬í•  ë•Œ ê¹Œì§€
+            if(transform.position.y >= bottomPos)//ºí·°ÀÌ ÃÖÇÏ ÁöÁ¡¿¡ µµ´ÞÇÒ ¶§ ±îÁö
             {
                 transform.position += Vector3.down * speed * Time.deltaTime;
             }
             
         }
 
-        //ë§¤ë‹¬ë ¤ ìžˆì§€ ì•Šìœ¼ë©´ ì¶”ê°€
-        if(transform.position.y<= topPos)//ë¸”ëŸ­ì´ ìµœìƒ ì§€ì  ë³´ë‹¤ ì•„ëž˜ì— ìžˆìœ¼ë©´
+        //¸Å´Þ·Á ÀÖÁö ¾ÊÀ¸¸é Ãß°¡
+        if(transform.position.y<= topPos)//ºí·°ÀÌ ÃÖ»ó ÁöÁ¡ º¸´Ù ¾Æ·¡¿¡ ÀÖÀ¸¸é
         {
             transform.position += Vector3.up * landSpeed * Time.deltaTime;
         }

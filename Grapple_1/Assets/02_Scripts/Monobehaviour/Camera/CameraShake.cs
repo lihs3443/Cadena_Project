@@ -16,7 +16,7 @@ public class CameraShake : MonoBehaviour
         initPos = CMvcam.GetCinemachineComponent<CinemachineFramingTransposer>().m_TrackedObjectOffset;
     }
 
-    // timer : í”ë“¤ë¦¼ì˜ ë¹ˆë„ ìˆ˜(ì‹œê°„), magnitude : í”ë“¤ë¦¼ì˜ ì •ë„
+    // timer : Èçµé¸²ÀÇ ºóµµ ¼ö(½Ã°£), magnitude : Èçµé¸²ÀÇ Á¤µµ
     public IEnumerator Shake(float duration, float magnitude)
     {
         float timer = 0;

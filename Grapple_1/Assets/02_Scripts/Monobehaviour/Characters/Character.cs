@@ -5,7 +5,7 @@ using UnityEngine;
 public abstract class Character : MonoBehaviour
 {
     /// <summary>
-    /// ëª¨ë“  ìºë¦­í„°ê°€ ê°€ì ¸ì•¼í•  ê³µí†µ ë³€ìˆ˜ & ë©”ì†Œë“œë“¤
+    /// ¸ğµç Ä³¸¯ÅÍ°¡ °¡Á®¾ßÇÒ °øÅë º¯¼ö & ¸Ş¼Òµåµé
     /// </summary>
     protected class CharacterStat
     {
@@ -16,8 +16,8 @@ public abstract class Character : MonoBehaviour
     protected CharacterStat characterStat = new CharacterStat();
     
     /// <summary>
-    /// ìºë¦­í„°ì˜ í˜„ì¬ ìƒíƒœ(FSM) <br />
-    /// ê´€ë ¨ ë©”ì†Œë“œ: GetCurrentState(), ChangeState();
+    /// Ä³¸¯ÅÍÀÇ ÇöÀç »óÅÂ(FSM) <br />
+    /// °ü·Ã ¸Ş¼Òµå: GetCurrentState(), ChangeState();
     /// </summary>
     protected IState currentState;
 
@@ -27,16 +27,16 @@ public abstract class Character : MonoBehaviour
     }
 
     /// <summary>
-    /// í˜„ì¬ ìºë¦­í„°ì˜ ìƒíƒœ ì •ë³´ê°€ í•„ìš”í• ë•Œ ì‚¬ìš©
+    /// ÇöÀç Ä³¸¯ÅÍÀÇ »óÅÂ Á¤º¸°¡ ÇÊ¿äÇÒ¶§ »ç¿ë
     /// </summary>
-    /// <returns>í˜„ì¬ ìƒíƒœë¥¼ IStateë¡œ ë°˜í™˜</returns>
+    /// <returns>ÇöÀç »óÅÂ¸¦ IState·Î ¹İÈ¯</returns>
     public IState GetCurrentState()
     {
         return currentState;
     }
 
     /// <summary>
-    /// ë‚´ / ì™¸ë¶€ì—ì„œ IStateì¸í„°í˜ì´ìŠ¤ë¥¼ êµ¬í˜„í•œ ê°ì²´ë¥¼ ì…ë ¥ë°›ì•„ í˜„ì¬ ìƒíƒœë¥¼ ë°”ê¿€ ë•Œ ì‚¬ìš©
+    /// ³» / ¿ÜºÎ¿¡¼­ IStateÀÎÅÍÆäÀÌ½º¸¦ ±¸ÇöÇÑ °´Ã¼¸¦ ÀÔ·Â¹Ş¾Æ ÇöÀç »óÅÂ¸¦ ¹Ù²Ü ¶§ »ç¿ë
     /// </summary>
     /// <param name="_state"></param>
     public void ChangeState(IState _state)
@@ -47,10 +47,10 @@ public abstract class Character : MonoBehaviour
     }
 
     /// <summary>
-    /// í•´ë‹¹ Characterê°ì²´ì˜ CharacterStatì˜ hitPointë¥¼ ê°ì†Œì‹œí‚¬ë•Œ ì‚¬ìš©
+    /// ÇØ´ç Character°´Ã¼ÀÇ CharacterStatÀÇ hitPoint¸¦ °¨¼Ò½ÃÅ³¶§ »ç¿ë
     /// </summary>
-    /// <param name="_damage">ê°€í•  ëŒ€ë¯¸ì§€</param>
-    /// <returns>ìµœì¢…ì ìœ¼ë¡œ ì…íŒ ëŒ€ë¯¸ì§€ ë°˜í™˜</returns>
+    /// <param name="_damage">°¡ÇÒ ´ë¹ÌÁö</param>
+    /// <returns>ÃÖÁ¾ÀûÀ¸·Î ÀÔÈù ´ë¹ÌÁö ¹İÈ¯</returns>
     public float InflictDamage(float _damage)
     {
         float finalDamage = _damage;
@@ -64,7 +64,7 @@ public abstract class Character : MonoBehaviour
     }
 
     /// <summary>
-    /// ì‚¬ë§ ì‹œ ì·¨í•  í–‰ë™ë“¤
+    /// »ç¸Á ½Ã ÃëÇÒ Çàµ¿µé
     /// </summary>
     protected abstract void DeathAction();
 }

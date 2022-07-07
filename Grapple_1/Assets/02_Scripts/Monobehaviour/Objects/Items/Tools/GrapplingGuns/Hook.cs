@@ -2,15 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// Hook(ê°ˆê³ ë¦¬) ê´€ë ¨ ì½”ë“œ
+// Hook(°¥°í¸®) °ü·Ã ÄÚµå
 public class Hook : MonoBehaviour
 {
     Grappling grappling;
-    public DistanceJoint2D playerToHookJoint;   //í”Œë ˆì´ì–´ì™€ í›…ì„ ì—°ê²°í•˜ëŠ” ì¡°ì¸íŠ¸
-    public HingeJoint2D hookToBoardJoint;    //í›…ê³¼ ë³´ë“œë¥¼ ì—°ê²°í•˜ëŠ” ì¡°ì¸íŠ¸
+    public DistanceJoint2D playerToHookJoint;   //ÇÃ·¹ÀÌ¾î¿Í ÈÅÀ» ¿¬°áÇÏ´Â Á¶ÀÎÆ®
+    public HingeJoint2D hookToBoardJoint;    //ÈÅ°ú º¸µå¸¦ ¿¬°áÇÏ´Â Á¶ÀÎÆ®
 
     public MoveBlock block;
-    public HangingBlock hBlock;     //hangingBlockì„ ì–»ì–´ì˜¤ê¸° ìœ„í•œ ë³€ìˆ˜
+    public HangingBlock hBlock;     //hangingBlockÀ» ¾ò¾î¿À±â À§ÇÑ º¯¼ö
 
     Collider2D attatchedBoard;
 
@@ -25,7 +25,7 @@ public class Hook : MonoBehaviour
 
     private void Update()
     {
-        if (block.isMove == true)//ë¸”ëŸ­ì´ ì›€ì§ì´ë©´ í›…ë„ ê°™ì´ ì›€ì§ì—¬ì•¼ í•˜ëŠ”ë° .. ë¸”ëŸ­ì´ ì›€ì§ì´ëŠ” ê°’ì„ ì–»ì–´ì™€ì„œ í›…ë„ ê·¸ë§Œí¼ ì›€ì§ì´ê²Œ í•œë‹¤
+        if (block.isMove == true)//ºí·°ÀÌ ¿òÁ÷ÀÌ¸é ÈÅµµ °°ÀÌ ¿òÁ÷¿©¾ß ÇÏ´Âµ¥ .. ºí·°ÀÌ ¿òÁ÷ÀÌ´Â °ªÀ» ¾ò¾î¿Í¼­ ÈÅµµ ±×¸¸Å­ ¿òÁ÷ÀÌ°Ô ÇÑ´Ù
         {
             transform.position += Vector3.right * block.speed * Time.deltaTime;
         }
@@ -35,35 +35,35 @@ public class Hook : MonoBehaviour
     {
         if(collision.CompareTag("Ground"))
         {
-            //í”Œë ˆì´ì–´ì™€ í›… ì—°ê²°(ëŒ€ë¡±ëŒ€ë¡±)
-            playerToHookJoint.distance = Vector2.Distance(grappling.transform.position, transform.position); // í”Œë ˆì´ì–´ ìœ„ì¹˜ë¥¼ ê¸°ì¤€ìœ¼ë¡œ í›…ì˜ ê¸¸ì´ ì¡°ì ˆ
-            playerToHookJoint.anchor = new Vector2(0, 0);           // í›…ì˜ ê¸¸ì´ì„¤ì • ì´ˆê¸°í™”
-            playerToHookJoint.enabled = true;                       // í›…ê³¼ í”Œë ˆì´ì–´ë¥¼ ì—°ê²°
+            //ÇÃ·¹ÀÌ¾î¿Í ÈÅ ¿¬°á(´ë·Õ´ë·Õ)
+            playerToHookJoint.distance = Vector2.Distance(grappling.transform.position, transform.position); // ÇÃ·¹ÀÌ¾î À§Ä¡¸¦ ±âÁØÀ¸·Î ÈÅÀÇ ±æÀÌ Á¶Àı
+            playerToHookJoint.anchor = new Vector2(0, 0);           // ÈÅÀÇ ±æÀÌ¼³Á¤ ÃÊ±âÈ­
+            playerToHookJoint.enabled = true;                       // ÈÅ°ú ÇÃ·¹ÀÌ¾î¸¦ ¿¬°á
 
-            /* ì˜¤ë¥˜ë¶€ë¶„
-            //í›…ê³¼ ë³´ë“œ ì—°ê²°
+            /* ¿À·ùºÎºĞ
+            //ÈÅ°ú º¸µå ¿¬°á
             attatchedBoard = collision;
             hookToBoardJoint.connectedBody = attatchedBoard.attachedRigidbody;
             hookToBoardJoint.enabled = true;
             */
 
-            grappling.isAttatch = true;                 // í›…ì´ ë¶™ì€ ìƒíƒœ
+            grappling.isAttatch = true;                 // ÈÅÀÌ ºÙÀº »óÅÂ
 
-            if (collision.GetComponent<MoveBlock>() != null) //í•´ë‹¹ í”Œë«í¼ì— ìŠ¤í¬ë¦½íŠ¸ê°€ ìˆëŠ”ì§€ ì²´í¬í•œë‹¤.
+            if (collision.GetComponent<MoveBlock>() != null) //ÇØ´ç ÇÃ·§Æû¿¡ ½ºÅ©¸³Æ®°¡ ÀÖ´ÂÁö Ã¼Å©ÇÑ´Ù.
             {
                 block = collision.GetComponent<MoveBlock>();
 
                 block.isMove = true;
             }
 
-            if (collision.GetComponent<HangingBlock>() != null) //í•´ë‹¹ í”Œë«í¼ì— ìŠ¤í¬ë¦½íŠ¸ê°€ ìˆëŠ”ì§€ ì²´í¬í•œë‹¤.
+            if (collision.GetComponent<HangingBlock>() != null) //ÇØ´ç ÇÃ·§Æû¿¡ ½ºÅ©¸³Æ®°¡ ÀÖ´ÂÁö Ã¼Å©ÇÑ´Ù.
             {
                 hBlock = collision.GetComponent<HangingBlock>();
 
                 hBlock.isHanging = true;
             }
 
-            // í›… ë¶€ì°©ì‹œ ì¹´ë©”ë¼ í”ë“¤ê¸° 
+            // ÈÅ ºÎÂø½Ã Ä«¸Ş¶ó Èçµé±â 
             StartCoroutine(CameraShake.instance.Shake(grappling.cameraShakeduration, grappling.cameraShakeMagnitude));
         }
     }

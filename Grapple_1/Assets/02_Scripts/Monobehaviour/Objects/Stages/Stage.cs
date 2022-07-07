@@ -5,28 +5,28 @@ using UnityEngine;
 public class Stage : MonoBehaviour
 {
     /// <summary>
-    /// ìŠ¤í…Œì´ì§€ ì •ë³´ë“¤ì˜ ì§‘í•© ê°ì²´
+    /// ½ºÅ×ÀÌÁö Á¤º¸µéÀÇ ÁıÇÕ °´Ã¼
     /// </summary>
     [System.Serializable]
     public class StageInfo
     {
-        [Tooltip("ìŠ¤í…Œì´ì§€ì˜ ì¸ë±ìŠ¤ ë²ˆí˜¸.\nì •ë³´ë¥¼ ê°€ì ¸ì˜¤ê³  ìŠ¤í…Œì´ì§€ë¥¼ ìƒì„±í•˜ëŠ”ë° ì‚¬ìš©í•˜ê¸°ë•Œë¬¸ì— ê²¹ì¹˜ë©´ ì•ˆëœë‹¤.")] public uint stageIndex;
-        //ì¶”í›„ ìŠ¤í…Œì´ì§€ ì´ë¦„ë“±ì˜ ì •ë³´ëŠ” stageIndexì™€ csvReaderë¥¼ í™œìš©í•˜ì—¬ ê°€ì ¸ì˜¤ë„ë¡ ì„¤ê³„í•˜ëŠ” í¸ì´ ì¢‹ì•„ë³´ì„
+        [Tooltip("½ºÅ×ÀÌÁöÀÇ ÀÎµ¦½º ¹øÈ£.\nÁ¤º¸¸¦ °¡Á®¿À°í ½ºÅ×ÀÌÁö¸¦ »ı¼ºÇÏ´Âµ¥ »ç¿ëÇÏ±â¶§¹®¿¡ °ãÄ¡¸é ¾ÈµÈ´Ù.")] public uint stageIndex;
+        //ÃßÈÄ ½ºÅ×ÀÌÁö ÀÌ¸§µîÀÇ Á¤º¸´Â stageIndex¿Í csvReader¸¦ È°¿ëÇÏ¿© °¡Á®¿Àµµ·Ï ¼³°èÇÏ´Â ÆíÀÌ ÁÁ¾Æº¸ÀÓ
         [ReadOnly]
-        [Tooltip("ìŠ¤í…Œì´ì§€ ì´ë¦„")] public string stageName;
+        [Tooltip("½ºÅ×ÀÌÁö ÀÌ¸§")] public string stageName;
     }
     /// <summary>
-    /// ìŠ¤í…Œì´ì§€ êµ¬ì„± ìš”ì†Œë“¤ì˜ ì§‘í•© ê°ì²´
+    /// ½ºÅ×ÀÌÁö ±¸¼º ¿ä¼ÒµéÀÇ ÁıÇÕ °´Ã¼
     /// </summary>
     [System.Serializable]
     public class StageComponents
     {
-        [Tooltip("ì²˜ìŒ ìŠ¤í…Œì´ì§€ì— ë“¤ì–´ì™”ì„ë•Œ í”Œë ˆì´ì–´ì˜ ìŠ¤í° ìœ„ì¹˜")] public Transform firstSpawnPoint;
-        [Tooltip("í•´ë‹¹ í¬ì¸íŠ¸ì— ë“¤ì–´ì˜¤ë©´ ìŠ¤í…Œì´ì§€ í´ë¦¬ì–´ë¡œ íŒì •")] public Transform stageEndPoint;
+        [Tooltip("Ã³À½ ½ºÅ×ÀÌÁö¿¡ µé¾î¿ÔÀ»¶§ ÇÃ·¹ÀÌ¾îÀÇ ½ºÆù À§Ä¡")] public Transform firstSpawnPoint;
+        [Tooltip("ÇØ´ç Æ÷ÀÎÆ®¿¡ µé¾î¿À¸é ½ºÅ×ÀÌÁö Å¬¸®¾î·Î ÆÇÁ¤")] public Transform stageEndPoint;
     }
-    [Header("ìŠ¤í…Œì´ì§€ ì •ë³´")]
+    [Header("½ºÅ×ÀÌÁö Á¤º¸")]
     public StageInfo stageInfo = new StageInfo();
-    [Header("ìŠ¤í…Œì´ì§€ êµ¬ì„± ìš”ì†Œ")]
+    [Header("½ºÅ×ÀÌÁö ±¸¼º ¿ä¼Ò")]
     public StageComponents stageComponents = new StageComponents();
 
     public Vector2 currentSpawnPoint { get; private set; }
@@ -42,7 +42,7 @@ public class Stage : MonoBehaviour
     }
 
     /// <summary>
-    /// í”Œë ˆì´ì–´ ì‚¬ë§ ë“± ì´í›„ ëŒë ¤ë³´ë‚´ëŠ” currentSpawnPointë¥¼ ë³€ê²½í•˜ëŠ” ìš©ë„
+    /// ÇÃ·¹ÀÌ¾î »ç¸Á µî ÀÌÈÄ µ¹·Áº¸³»´Â currentSpawnPoint¸¦ º¯°æÇÏ´Â ¿ëµµ
     /// </summary>
     public void ChangeSpawnPosition(Vector2 _position)
     {
@@ -50,8 +50,8 @@ public class Stage : MonoBehaviour
     }
 }
 
-///ìŠ¤í…Œì´ì§€ê°€ ê°€ì ¸ì•¼í•  ìš”ì†Œ
-///ìŠ¤í° í¬ì¸íŠ¸
-///ì‹œì‘ì ê³¼ ëì 
-///(ë¶€ê°€ìš”ì†Œ)
-///í´ë¦¬ì–´ íƒ€ì„
+///½ºÅ×ÀÌÁö°¡ °¡Á®¾ßÇÒ ¿ä¼Ò
+///½ºÆù Æ÷ÀÎÆ®
+///½ÃÀÛÁ¡°ú ³¡Á¡
+///(ºÎ°¡¿ä¼Ò)
+///Å¬¸®¾î Å¸ÀÓ

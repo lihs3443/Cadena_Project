@@ -16,7 +16,7 @@ public class State_Idle : IState
 
     public void OnStateUpdate()
     {
-        Debug.Log($"í˜„ì¬ ìƒíƒœ: {this.GetType().Name}");
+        Debug.Log($"ÇöÀç »óÅÂ: {this.GetType().Name}");
     }
 }
 
@@ -34,7 +34,7 @@ public class State_Moving : IState
 
     public void OnStateUpdate()
     {
-        Debug.Log($"í˜„ì¬ ìƒíƒœ: {this.GetType().Name}");
+        Debug.Log($"ÇöÀç »óÅÂ: {this.GetType().Name}");
     }
 }
 
@@ -52,6 +52,6 @@ public class State_Attacking : IState
 
     public void OnStateUpdate()
     {
-        Debug.Log($"í˜„ì¬ ìƒíƒœ: {this.GetType().Name}");
+        Debug.Log($"ÇöÀç »óÅÂ: {this.GetType().Name}");
     }
 }
